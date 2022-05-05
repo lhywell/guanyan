@@ -148,8 +148,6 @@
 </template>
 
 <script>
-import { getNews, newsUpdate } from '@/api/crm/index.js'
-
 import permission from '@/common/directive/permission' // 权限判断指令
 import { hasPermission } from '@/common/conf/utils'
 // 权限判断方法
@@ -339,8 +337,6 @@ export default {
   },
   mounted() {
     this.initHeight()
-
-    this.fetchData()
   },
   methods: {
     hasPermission,
@@ -354,30 +350,6 @@ export default {
         return false
       })
     },
-    async fetchData() {
-      const params = {
-        ...this.queryForm,
-        channelId: 10, // 首页
-        page: { current: 1, size: 10 },
-      }
-      this.listLoading = true
-      const { data } = await getNews(params)
-      const list = data.records
-      this.total = data.total
-      this.listClear = list
-
-      setTimeout(() => {
-        this.listLoading = false
-      }, 500)
-    },
-    handleSizeChange(val) {
-      this.queryForm.page.size = val
-      this.fetchData()
-    },
-    handleCurrentChange(val) {
-      this.queryForm.page.current = val
-      this.fetchData()
-    },
     typeChange(e) {
       window.console.log(e, typeof e)
       this.queryForm.productOne = ''
@@ -388,42 +360,16 @@ export default {
       ]
     },
     addProducts() {
-      // this.products.push({
-      //   label: '产品',
-      //   id: Date.now(),
-      // })
-
       this.queryForm.productTwo.push({
         value: '',
         key: Date.now(),
       })
     },
     deleteProduct(item) {
-      // window.console.log(11, index)
-      // if (this.products.length > 1) {
-      //   this.products.splice(index, 1)
-      // }
-
       const index = this.queryForm.productTwo.indexOf(item)
       if (this.queryForm.productTwo.length > 1 && index !== -1) {
         this.queryForm.productTwo.splice(index, 1)
       }
-    },
-    handleEdit(row) {
-      this.createForm.id = row.id
-      this.createForm.title = row.title
-      this.dialogVisible = true
-    },
-    handleClose() {
-      this.dialogVisible = false
-    },
-    async handleSave() {
-      await newsUpdate(this.createForm)
-
-      this.fetchData()
-
-      this.$message.success('更新成功')
-      this.dialogVisible = false
     },
   },
 }
