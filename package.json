@@ -65,5 +65,9 @@
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
+  },
+  "engineStrict": true,
+  "engines": {
+    "node": "16.14.2"
   }
 }

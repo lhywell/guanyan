@@ -60,7 +60,7 @@ const setting = {
   // 简写
   abbreviation: '',
   // 开发环境端口号
-  devPort: '80',
+  devPort: '9891',
   // 版本号
   version: process.env.VUE_APP_VERSION,
   // 这一项非常重要！请务必保留MIT协议
