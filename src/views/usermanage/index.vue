@@ -42,14 +42,6 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="手机号" prop="phone" width="150">
-          <template #default="{ row }">
-            <div>
-              <el-input maxlength="64" v-if="row.isAdd || row.isEdit" v-model="row.phone" />
-              <span v-else>{{ row.phone }}</span>
-            </div>
-          </template>
-        </el-table-column>
         <el-table-column label="密码" prop="password">
           <template #default="{ row }">
             <div>
@@ -75,26 +67,6 @@
                 />
               </el-select>
               <span v-else>{{ row.roleName }}</span>
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column label="所属售电公司" prop="companyName">
-          <template #default="{ row }">
-            <div>
-              <el-select
-                v-model="row.companyName"
-                @change="changeCompany($event, row)"
-                placeholder="请选择"
-                v-if="row.isAdd || row.isEdit"
-              >
-                <el-option
-                  v-for="item in companyOptions"
-                  :key="item.id"
-                  :label="item.companyName"
-                  :value="item.companyName"
-                />
-              </el-select>
-              <span v-else>{{ row.companyName }}</span>
             </div>
           </template>
         </el-table-column>
@@ -152,7 +124,6 @@ import {
   userAdd,
   userUpdate,
 } from '@/api/usermanage/index.js'
-import { getCompany } from '@/api/crm/index.js'
 // import { list as sellerList, sellerTypeList } from '@/api/seller'
 // import { height } from '@/mixins/height'
 import getUsers from './userRoles'
@@ -180,7 +151,6 @@ export default {
   created() {
     this.handleQuery()
     this.handleRoleList()
-    this.handleCompanyList()
   },
   mounted() {
     this.initHeight()
@@ -192,15 +162,6 @@ export default {
     async handleRoleList() {
       const res = await getRoleList()
       this.roleOptions = res.data
-    },
-    async handleCompanyList() {
-      const { data } = await getCompany({
-        page: {
-          current: 1,
-          size: 10000,
-        },
-      })
-      this.companyOptions = data.records
     },
     handleRoleChange(val, row) {
       if (+val > 2) {
