@@ -4,9 +4,10 @@
 
 <script>
 export default {
-  name: "App",
-};
+  name: 'App',
+  mounted() {},
+}
 </script>
 <style lang="scss">
-@import "assets/sass/index.scss";
+@import 'assets/sass/index.scss';
 </style>

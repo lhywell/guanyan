@@ -41,15 +41,15 @@ module.exports = {
     after: require('./mock/mock-server.js'),
     disableHostCheck: true,
     proxy: {
-      '/test': {
-        target: 'https://t-zwlh.bailian-ai.com/applet-admin/api',
-        secure: true,
+      '/api': {
+        target: 'http://localhost:3000',
+        secure: false,
         // 允许websockets跨域
         changeOrigin: true,
         // 如果要代理 websockets，配置这个参数
         // ws: true,
         pathRewrite: {
-          '^/test': '',
+          '^/api': '',
         },
       },
     },

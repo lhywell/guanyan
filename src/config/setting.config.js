@@ -6,21 +6,13 @@ const isDev = process.env.NODE_ENV === 'development'
 const outputDir =
   {
     development: 'test',
-    production: 'zwlh',
-  }[process.env.NODE_ENV] || 'zwlh'
+    production: 'dist',
+  }[process.env.NODE_ENV] || 'dist'
 
-let socketUrl = 'wss://zwlh-trade.bailian-ai.com/time/'
 let baseURL = '//zwlh.bailian-ai.com/api'
-let tradeBaseUrl = 'https://zwlh-trade.bailian-ai.com'
 if (isDev) {
-  baseURL = 'https://t-zwlh.bailian-ai.com/applet-admin/api'
-  // baseURL = '/test'
-  socketUrl = 'wss://t-zwlh-trade.bailian-ai.com/time/'
-  tradeBaseUrl = 'https://t-zwlh-trade.bailian-ai.com'
-
-  // baseURL = 'http://100.64.72.108:9090' // dev-part 西营接口
-  // socketUrl = 'ws://100.64.72.108:9090/time/'  // dev-part
-  // tradeBaseUrl = 'http://100.64.72.108:9090'  // dev-part
+  // baseURL = 'https://t-zwlh.bailian-ai.com/applet-admin/api'
+  baseURL = '/api'
 }
 
 /** 区分测试环境与生产环境
@@ -61,28 +53,6 @@ const setting = {
   transpileDependencies: ['vue-echarts', 'resize-detector'],
   // 默认的接口地址 如果是开发环境和生产环境走vab-mock-server，当然你也可以选择自己配置成需要的接口地址
   baseURL,
-  socketUrl,
-  tradeBaseUrl,
-  // baseURL: isDev ? 'https://t-zwlh.bailian-ai.com/api' : '//zwlh.bailian-ai.com/api',
-  // tradeBaseUrl: isDev ? 'https://t-zwlh-trade.bailian-ai.com' : 'https://zwlh-trade.bailian-ai.com',
-  // tradeBaseUrl: 'https://zwlh-trade.bailian-ai.com',
-  // tradeBaseUrl: 'http://100.64.80.45:9090',
-  // socketUrl: isDev
-  //   ? 'wss://t-zwlh-trade.bailian-ai.com/time/'
-  //   : 'wss://zwlh-trade.bailian-ai.com/time/',
-
-  // 正式环境临时配置
-  // baseURL: 'https://zwlh.bailian-ai.com/api', // 正式环境
-  // tradeBaseUrl: 'https://zwlh-trade.bailian-ai.com', // 正式环境
-  // socketUrl: 'wss://zwlh-trade.bailian-ai.com/time/', // 正式环境
-  // socketUrl: 'ws://localhost:8091/', // 正式环境
-  // tradeBaseUrl: 'http://100.64.72.227:9090', // 王子昂
-  // baseURL: 'http://100.64.79.255:9090', // 西营
-  // socketUrl: 'ws://100.64.79.255:9090/time/',
-  // baseURL: 'http://100.64.72.227:9090',
-  // socketUrl: 'ws://100.64.72.227:9090/time/',
-  // socketUrl: 'ws://localhost:8091/time/',
-  // baseURL: 'http://t-zwlh.bailian-ai.com:9090',
 
   // 标题 （包括初次加载雪花屏的标题 页面的标题 浏览器的标题）
   title: '易能管家',
