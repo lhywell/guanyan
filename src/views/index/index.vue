@@ -3,17 +3,6 @@
   <el-main style="background: #fff">
     <!-- <div style="text-align: right">注意：上传文件只支持视频格式mp4,avi,flv,ogg,wmv,rmvb,mov</div> -->
     <el-form ref="queryForm" :model="queryForm" class="search-form" label-width="120px">
-      <el-form-item label="客户微信号">
-        <el-input v-model="queryForm.weixin" placeholder="请输入" clearable style="width: 180px" />
-      </el-form-item>
-      <el-form-item label="客户微信名">
-        <el-input
-          v-model="queryForm.weixinName"
-          placeholder="请输入"
-          clearable
-          style="width: 180px"
-        />
-      </el-form-item>
       <el-form-item
         label="加粉日期"
         prop="newDate"
@@ -26,7 +15,7 @@
           type="date"
           value-format="yyyy-MM-dd"
           :clearable="false"
-          style="width: 180px"
+          style="width: 200px"
         />
       </el-form-item>
       <el-form-item
@@ -41,7 +30,7 @@
           type="date"
           value-format="yyyy-MM-dd"
           :clearable="false"
-          style="width: 180px"
+          style="width: 200px"
         />
       </el-form-item>
       <el-form-item
@@ -60,7 +49,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="成交手机">
-        <el-input v-model="queryForm.phone" placeholder="请输入" clearable style="width: 180px" />
+        <el-input v-model="queryForm.phone" placeholder="请输入" clearable style="width: 200px" />
       </el-form-item>
       <el-form-item
         label="转化类型"
@@ -140,6 +129,100 @@
           />
         </el-select>
       </el-form-item>
+      <h1 style="margin: 30px 38px; font-size: 16px">客户信息录入</h1>
+      <el-form-item label="客户微信号">
+        <el-input v-model="queryForm.weixin" placeholder="请输入" clearable style="width: 200px" />
+      </el-form-item>
+      <el-form-item label="客户微信名">
+        <el-input
+          v-model="queryForm.weixinName"
+          placeholder="请输入"
+          clearable
+          style="width: 200px"
+        />
+      </el-form-item>
+      <el-form-item label="真实姓名">
+        <el-input
+          v-model="queryForm.realName"
+          placeholder="请输入"
+          clearable
+          style="width: 200px"
+        />
+      </el-form-item>
+      <el-form-item label="性别">
+        <el-select
+          v-model="queryForm.sex"
+          placeholder="请选择"
+          :clearable="true"
+          style="width: 200px"
+        >
+          <el-option
+            v-for="(item, index) in ['男', '女']"
+            :key="index"
+            :label="item"
+            :value="index + 1"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="阳历出生日">
+        <el-date-picker
+          v-model="queryForm.birthdayX"
+          placeholder="请选择日期"
+          type="date"
+          value-format="yyyy-MM-dd"
+          :clearable="true"
+          style="width: 200px"
+        />
+      </el-form-item>
+      <el-form-item label="阴历出生日">
+        <el-date-picker
+          v-model="queryForm.birthdayY"
+          placeholder="请选择日期"
+          type="date"
+          value-format="yyyy-MM-dd"
+          :clearable="true"
+          style="width: 200px"
+        />
+      </el-form-item>
+      <el-form-item label="出生时间">
+        <el-time-picker
+          v-model="queryForm.birthTime"
+          :picker-options="{
+            selectableRange: '00:00:00 - 23:59:59',
+          }"
+          placeholder="任意时间点"
+          style="width: 200px"
+        />
+      </el-form-item>
+      <el-form-item label="出生地">
+        <el-cascader
+          size="large"
+          :options="options"
+          v-model="selectedOptions"
+          @change="handleChange"
+          :clearable="true"
+          style="width: 400px"
+        />
+      </el-form-item>
+      <el-form-item label="电话号码">
+        <el-input v-model="queryForm.phone" placeholder="请输入" clearable style="width: 200px" />
+      </el-form-item>
+      <el-form-item label="现居地">
+        <el-input
+          v-model="queryForm.liveAddress"
+          placeholder="请输入"
+          clearable
+          style="width: 480px"
+        />
+      </el-form-item>
+      <el-form-item label="邮寄地址">
+        <el-input
+          v-model="queryForm.mailAddress"
+          placeholder="请输入"
+          clearable
+          style="width: 480px"
+        />
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="submitForm('queryForm')">录入</el-button>
       </el-form-item>
@@ -148,12 +231,15 @@
 </template>
 
 <script>
+import { regionData } from 'element-china-area-data'
+
 import permission from '@/common/directive/permission' // 权限判断指令
 import { hasPermission } from '@/common/conf/utils'
 // 权限判断方法
 import heightMix from '@/mixins/height'
 
 // console.log(height)
+
 export default {
   directives: { permission },
   mixins: [heightMix],
@@ -166,6 +252,9 @@ export default {
       total: 0,
       background: true,
       elementLoadingText: '正在加载...',
+      value1: '',
+      options: regionData,
+      selectedOptions: [],
       queryForm: {
         weixin: '',
         weixinName: '',
@@ -179,6 +268,8 @@ export default {
           },
         ],
         pay: '',
+        birthTime: '',
+
         page: {
           size: 20,
           current: 1,
@@ -370,6 +461,9 @@ export default {
       if (this.queryForm.productTwo.length > 1 && index !== -1) {
         this.queryForm.productTwo.splice(index, 1)
       }
+    },
+    handleChange(value) {
+      window.console.log(value)
     },
   },
 }
