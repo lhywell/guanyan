@@ -190,7 +190,7 @@
           :picker-options="{
             selectableRange: '00:00:00 - 23:59:59',
           }"
-          placeholder="任意时间点"
+          placeholder="请选择时间"
           style="width: 200px"
         />
       </el-form-item>
