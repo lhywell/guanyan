@@ -200,7 +200,7 @@ export default {
           this.list.splice(index, 1)
           return
         }
-        res = await usersDelete({ id: row.id })
+        res = await usersDelete({ id: row._id })
         if (res.data) {
           this.$message.success('成功', 'success')
         }
@@ -222,13 +222,8 @@ export default {
       row.companyId = this.companyOptions.filter(d => d.companyName === e)[0].id
     },
     async handleSave(row) {
-      const { id, username, password, companyId, realName, roleId, phone } = row
+      const { _id, username, password, realName, roleId } = row
 
-      const phonereg = /^1\d{10}/
-      if (!phonereg.test(phone)) {
-        this.$message.warning('请输入正确手机号!')
-        return
-      }
       const validtypes = ['username:用户名', 'realName:真实姓名']
 
       for (let i = 0, len = validtypes.length; i < len; i++) {
@@ -243,22 +238,20 @@ export default {
       const params = {
         username,
         password,
-        companyId,
         realName,
         roleId,
-        phone,
       }
-      if (row.isAdd && !id) {
+      if (row.isAdd && !_id) {
         await userAdd(params)
         // window.console.log(params, 222)
         row.isAdd = false
         this.handleQuery()
         this.$message.success('添加成功')
       }
-      if (row.isEdit && id) {
+      if (row.isEdit && _id) {
         // window.console.log(params, 222)
         await userUpdate({
-          id,
+          id: _id,
           ...params,
         })
         row.isEdit = false

@@ -44,6 +44,7 @@ module.exports = {
       },
     ],
     curly: ['error', 'multi-line'], // 禁止多行条件省略花括号
+    'no-underscore-dangle': ['error', { allow: ['_id'] }],
   },
   overrides: [
     {
