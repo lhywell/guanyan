@@ -73,8 +73,8 @@ export const asyncRoutes = [
         component: () => import('@/views/index/index'),
         name: 'company',
         meta: {
-          title: '录入产品',
-          roles: ['admin', 'platformer'],
+          title: '报单录入',
+          roles: ['admin', 'platformer', 'inputer'],
         },
       },
     ],
@@ -91,7 +91,7 @@ export const asyncRoutes = [
         meta: {
           title: '流水管理',
           icon: 'el-icon-coin',
-          roles: ['admin', 'platformer'],
+          roles: ['admin', 'platformer', 'inputer'],
         },
       },
     ],
@@ -108,7 +108,7 @@ export const asyncRoutes = [
         meta: {
           title: '投放管理',
           icon: 'el-icon-data-analysis',
-          roles: ['admin', 'platformer'],
+          roles: ['admin', 'platformer', 'launcher'],
         },
       },
     ],
@@ -125,7 +125,7 @@ export const asyncRoutes = [
         meta: {
           title: '法事管理',
           icon: 'el-icon-document',
-          roles: ['admin', 'platformer'],
+          roles: ['admin', 'platformer', 'inputer'],
         },
       },
     ],
@@ -142,7 +142,7 @@ export const asyncRoutes = [
         meta: {
           title: '售后管理',
           icon: 'el-icon-truck',
-          roles: ['admin', 'platformer'],
+          roles: ['admin', 'platformer', 'inputer'],
         },
       },
     ],
