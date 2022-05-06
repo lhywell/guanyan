@@ -34,8 +34,8 @@ router.beforeEach(async (to, from, next) => {
           // 获取用户信息
           const { data } = await store.dispatch('user/getInfo')
 
-          const ary = ['系统管理员', '售电公司管理员', '平台管理员', '内容审核管理员']
-          const aryEn = ['admin', 'sder', 'platformer', 'reviewer']
+          const ary = ['系统管理员', '平台管理员', '录入管理员', '投放管理员']
+          const aryEn = ['admin', 'platformer', 'inputer', 'launcher']
           const index = ary.findIndex(d => d === data.roleName)
 
           // 根据角色生成可访问的路由

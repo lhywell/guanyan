@@ -58,8 +58,8 @@ const actions = {
       params: { token: state.token },
     }).then(res => {
       const { roleName, username } = res.data
-      const ary = ['系统管理员', '售电公司管理员', '平台管理员', '内容审核管理员']
-      const aryEn = ['admin', 'sder', 'platformer', 'reviewer']
+      const ary = ['系统管理员', '平台管理员', '录入管理员', '投放管理员']
+      const aryEn = ['admin', 'platformer', 'inputer', 'launcher']
       const index = ary.findIndex(d => d === roleName)
 
       const roles = aryEn[index]
