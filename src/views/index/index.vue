@@ -43,13 +43,18 @@
           <el-option
             v-for="(item, index) in salesOptions"
             :key="index"
-            :label="item"
-            :value="item"
+            :label="item.name"
+            :value="item.id"
           />
         </el-select>
       </el-form-item>
       <el-form-item label="成交手机">
-        <el-input v-model="queryForm.phone" placeholder="请输入" clearable style="width: 200px" />
+        <el-input
+          v-model="queryForm.dealPhone"
+          placeholder="请输入"
+          clearable
+          style="width: 200px"
+        />
       </el-form-item>
       <el-form-item
         label="转化类型"
@@ -197,15 +202,20 @@
       <el-form-item label="出生地">
         <el-cascader
           size="large"
-          :options="options"
-          v-model="selectedOptions"
+          :options="addressOptions"
+          v-model="queryForm.birthAddress"
           @change="handleChange"
           :clearable="true"
           style="width: 400px"
         />
       </el-form-item>
       <el-form-item label="电话号码">
-        <el-input v-model="queryForm.phone" placeholder="请输入" clearable style="width: 200px" />
+        <el-input
+          v-model="queryForm.customerPhone"
+          placeholder="请输入"
+          clearable
+          style="width: 200px"
+        />
       </el-form-item>
       <el-form-item label="现居地">
         <el-input
@@ -232,6 +242,7 @@
 
 <script>
 import { regionData } from 'element-china-area-data'
+import { getSaleList } from '@/api/crm/index.js'
 
 import permission from '@/common/directive/permission' // 权限判断指令
 import { hasPermission } from '@/common/conf/utils'
@@ -246,20 +257,12 @@ export default {
   components: {},
   data() {
     return {
-      listClear: [],
-      listLoading: false,
-      layout: 'total, sizes, prev, pager, next, jumper',
-      total: 0,
-      background: true,
-      elementLoadingText: '正在加载...',
-      value1: '',
-      options: regionData,
-      selectedOptions: [],
+      addressOptions: regionData,
       queryForm: {
-        weixin: '',
-        weixinName: '',
         newDate: '',
         dealDate: '',
+        sale: '',
+        dealPhone: '',
         type: 1,
         productOne: '',
         productTwo: [
@@ -268,56 +271,23 @@ export default {
           },
         ],
         pay: '',
-        birthTime: '',
 
+        weixin: '',
+        weixinName: '',
+        realName: '',
+        sex: '',
+        birthdayX: '',
+        birthdayY: '',
+        birthTime: '',
+        birthAddress: '',
+        customerPhone: '',
+        liveAddress: '',
+        mailAddress: '',
         page: {
           size: 20,
           current: 1,
         },
       },
-      createForm: {
-        title: '',
-      },
-      typeOptions: [
-        {
-          label: '一转',
-          value: 1,
-        },
-        {
-          label: '二转',
-          value: 2,
-        },
-      ],
-      payOptions: [
-        {
-          label: '大羽有赞',
-          value: 1,
-        },
-        {
-          label: '大羽微店',
-          value: 2,
-        },
-        {
-          label: '大羽支付宝',
-          value: 3,
-        },
-        {
-          label: '大羽微信',
-          value: 4,
-        },
-        {
-          label: '大羽银行卡',
-          value: 5,
-        },
-        {
-          label: '观言对公',
-          value: 6,
-        },
-        {
-          label: '海风吹对公',
-          value: 7,
-        },
-      ],
       productOneOptions: [
         {
           label: '占卜388',
@@ -404,8 +374,7 @@ export default {
           id: Date.now(),
         },
       ],
-      salesOptions: ['崔文怡', '杨昌弟', '闫亚东', '董轩'],
-      dialogVisible: false,
+      salesOptions: [],
     }
   },
   computed: {
@@ -428,18 +397,14 @@ export default {
   },
   mounted() {
     this.initHeight()
+
+    this.getSaleList()
   },
   methods: {
     hasPermission,
-    submitForm(formName) {
-      this.$refs[formName].validate(valid => {
-        if (valid) {
-          window.console.log('222', this.queryForm)
-          return true
-        }
-        window.console.log('error submit!!', this.queryForm)
-        return false
-      })
+    async getSaleList() {
+      const { data } = await getSaleList()
+      this.salesOptions = data
     },
     typeChange(e) {
       window.console.log(e, typeof e)
@@ -464,6 +429,16 @@ export default {
     },
     handleChange(value) {
       window.console.log(value)
+    },
+    submitForm(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          window.console.log('222', this.queryForm)
+          return true
+        }
+        window.console.log('error submit!!', this.queryForm)
+        return false
+      })
     },
   },
 }
