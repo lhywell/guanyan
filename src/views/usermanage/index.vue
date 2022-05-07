@@ -215,7 +215,12 @@ export default {
     async handleSave(row) {
       const { _id, username, password, realName, roleId } = row
 
-      const validtypes = ['username:用户名', 'realName:真实姓名']
+      const validtypes = [
+        'username:用户名',
+        'realName:真实姓名',
+        'password:密码',
+        'roleId:所属角色',
+      ]
 
       for (let i = 0, len = validtypes.length; i < len; i++) {
         const curType = validtypes[i]
