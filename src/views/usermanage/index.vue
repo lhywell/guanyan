@@ -20,6 +20,7 @@
         :data="list"
         :element-loading-text="elementLoadingText"
         :height="height"
+        stripe
       >
         <el-table-column type="index" label="序号" width="55">
           <template slot-scope="scope">
@@ -126,7 +127,7 @@ import {
 } from '@/api/usermanage/index.js'
 // import { list as sellerList, sellerTypeList } from '@/api/seller'
 // import { height } from '@/mixins/height'
-import getUsers from './userRoles'
+// import getUsers from './userRoles'
 
 import heightMix from '@/mixins/height'
 import { areaAll } from '@/common/area.js'
@@ -138,7 +139,7 @@ export default {
       layout: 'total, sizes, prev, pager, next, jumper',
       total: 0,
       background: true,
-      userTypes: getUsers(),
+      // userTypes: getUsers(),
       listLoading: false,
       elementLoadingText: '正在加载...',
       queryForm: { username: '', page: { current: 1, size: 20 } },
@@ -209,17 +210,11 @@ export default {
         this.handleQuery()
       }
     },
-    handleEdit(row, index) {
-      const listNew = this.list.slice()
-      listNew[index].isEdit = true
-
-      this.list = listNew
+    handleEdit(row) {
+      this.$set(row, 'isEdit', true)
     },
     changeSelect(e, row) {
       row.roleId = this.roleOptions.filter(d => d.roleDesc === e)[0].id
-    },
-    changeCompany(e, row) {
-      row.companyId = this.companyOptions.filter(d => d.companyName === e)[0].id
     },
     async handleSave(row) {
       const { _id, username, password, realName, roleId } = row
@@ -269,14 +264,8 @@ export default {
         return
       }
       this.list.unshift({
-        name: '',
         isAdd: true,
         isEdit: false,
-        code: '',
-        province: '山西省',
-        sellerName: '',
-        pluginId: '',
-        phone: '',
       })
     },
   },
