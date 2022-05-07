@@ -146,6 +146,8 @@ export default {
   created() {
     this.handleQuery()
     this.handleRoleList()
+
+    this.getTableProps()
   },
   mounted() {
     this.initHeight()

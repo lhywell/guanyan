@@ -186,6 +186,10 @@ export default {
       this.key += 1
     },
   },
+  created() {
+    this.getTableProps()
+    this.getPickOption()
+  },
   mounted() {
     this.initHeight()
 

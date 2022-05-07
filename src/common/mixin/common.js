@@ -41,7 +41,19 @@ export default {
           value: 7,
         },
       ],
-      pickerOptions: {
+    }
+  },
+  mounthed() {},
+  methods: {
+    getTableProps() {
+      this.listLoading = false
+      this.layout = 'total, sizes, prev, pager, next, jumper'
+      this.total = 0
+      this.background = true
+      this.elementLoadingText = '正在加载...'
+    },
+    getPickOption() {
+      this.pickerOptions = {
         shortcuts: [
           {
             text: '本周',
@@ -124,15 +136,8 @@ export default {
             },
           },
         ],
-      },
-      listLoading: false,
-      layout: 'total, sizes, prev, pager, next, jumper',
-      total: 0,
-      background: true,
-      elementLoadingText: '正在加载...',
-    }
-  },
-  methods: {
+      }
+    },
     getStatus(status) {
       if (status === '1') {
         return '待审核'
