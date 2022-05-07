@@ -44,7 +44,7 @@
             v-for="(item, index) in salesOptions"
             :key="index"
             :label="item.name"
-            :value="item.id"
+            :value="item.id + '_' + item.name"
           />
         </el-select>
       </el-form-item>
@@ -82,8 +82,8 @@
           <el-option
             v-for="(item, index) in productOneOptions"
             :key="index"
-            :label="item.label"
-            :value="item.value"
+            :label="item.name"
+            :value="item.id + '_' + item.name"
           />
         </el-select>
       </el-form-item>
@@ -101,8 +101,8 @@
               <el-option
                 v-for="(item, y) in productTwoOptions"
                 :key="y"
-                :label="item.label"
-                :value="item.value"
+                :label="item.name"
+                :value="item.id + '_' + item.name"
               />
             </el-select>
             <i
@@ -130,7 +130,7 @@
             v-for="(item, index) in payOptions"
             :key="index"
             :label="item.label"
-            :value="item.value"
+            :value="item.value + '_' + item.label"
           />
         </el-select>
       </el-form-item>
@@ -195,15 +195,17 @@
           :picker-options="{
             selectableRange: '00:00:00 - 23:59:59',
           }"
+          value-format="HH:mm:ss"
           placeholder="请选择时间"
           style="width: 200px"
         />
       </el-form-item>
       <el-form-item label="出生地">
         <el-cascader
+          ref="cascader"
           size="large"
           :options="addressOptions"
-          v-model="queryForm.birthAddress"
+          v-model="queryForm.birthAddressCode"
           @change="handleChange"
           :clearable="true"
           style="width: 400px"
@@ -242,7 +244,7 @@
 
 <script>
 import { regionData } from 'element-china-area-data'
-import { getSaleList } from '@/api/crm/index.js'
+import { getSaleList, addCustomer, getProductOne, getProductTwo } from '@/api/crm/index.js'
 
 import permission from '@/common/directive/permission' // 权限判断指令
 import { hasPermission } from '@/common/conf/utils'
@@ -279,95 +281,13 @@ export default {
         birthdayX: '',
         birthdayY: '',
         birthTime: '',
-        birthAddress: '',
+        birthAddressCode: '',
         customerPhone: '',
         liveAddress: '',
         mailAddress: '',
-        page: {
-          size: 20,
-          current: 1,
-        },
       },
-      productOneOptions: [
-        {
-          label: '占卜388',
-          value: 10,
-        },
-        {
-          label: '本命盘688',
-          value: 11,
-        },
-        {
-          label: '深入全盘988',
-          value: 12,
-        },
-        {
-          label: '全盘VIP1688',
-          value: 13,
-        },
-      ],
-      productTwoOptions: [
-        {
-          label: '文昌法事3800',
-          value: 101,
-        },
-        {
-          label: '文昌法事5800',
-          value: 102,
-        },
-        {
-          label: '化煞法事3800',
-          value: 103,
-        },
-        {
-          label: '婚姻和合法事3800',
-          value: 104,
-        },
-        {
-          label: '开财库法事5800',
-          value: 105,
-        },
-        {
-          label: '超度法事5800',
-          value: 106,
-        },
-        {
-          label: '受生债法事6800',
-          value: 107,
-        },
-        {
-          label: '文昌灵符1888',
-          value: 108,
-        },
-        {
-          label: '太岁灵符2888',
-          value: 109,
-        },
-        {
-          label: '平安符灵符3888',
-          value: 110,
-        },
-        {
-          label: '灵宝1888',
-          value: 111,
-        },
-        {
-          label: '灵宝3888',
-          value: 112,
-        },
-        {
-          label: '灵宝6888',
-          value: 113,
-        },
-        {
-          label: '起名1888',
-          value: 114,
-        },
-        {
-          label: '阳宅6800',
-          value: 115,
-        },
-      ],
+      productOneOptions: [],
+      productTwoOptions: [],
       products: [
         {
           label: '产品',
@@ -399,12 +319,22 @@ export default {
     this.initHeight()
 
     this.getSaleList()
+    this.getPtOne()
+    this.getPtTwo()
   },
   methods: {
     hasPermission,
     async getSaleList() {
       const { data } = await getSaleList()
       this.salesOptions = data
+    },
+    async getPtOne() {
+      const { data } = await getProductOne()
+      this.productOneOptions = data
+    },
+    async getPtTwo() {
+      const { data } = await getProductTwo()
+      this.productTwoOptions = data
     },
     typeChange(e) {
       window.console.log(e, typeof e)
@@ -427,13 +357,20 @@ export default {
         this.queryForm.productTwo.splice(index, 1)
       }
     },
-    handleChange(value) {
-      window.console.log(value)
+    handleChange() {
+      this.$nextTick(() => {
+        this.queryForm.birthAddressLabel = this.$refs.cascader
+          .getCheckedNodes()[0]
+          .pathLabels.join('/')
+      })
     },
     submitForm(formName) {
-      this.$refs[formName].validate(valid => {
+      this.$refs[formName].validate(async valid => {
         if (valid) {
           window.console.log('222', this.queryForm)
+          const res = await addCustomer(this.queryForm)
+
+          this.$message.success('录入成功', res)
           return true
         }
         window.console.log('error submit!!', this.queryForm)
