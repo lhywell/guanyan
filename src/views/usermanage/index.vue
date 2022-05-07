@@ -136,12 +136,6 @@ export default {
   mixins: [heightMix],
   data() {
     return {
-      layout: 'total, sizes, prev, pager, next, jumper',
-      total: 0,
-      background: true,
-      // userTypes: getUsers(),
-      listLoading: false,
-      elementLoadingText: '正在加载...',
       queryForm: { username: '', page: { current: 1, size: 20 } },
       list: [],
       roleOptions: [],

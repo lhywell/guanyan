@@ -21,10 +21,10 @@
           @change="conditionChange"
         >
           <el-option
-            v-for="(item, index) in userOptions"
+            v-for="(item, index) in salesOptions"
             :key="index"
-            :label="item.label"
-            :value="item.value"
+            :label="item.name"
+            :value="item.id"
           />
         </el-select>
       </el-form-item>
@@ -91,7 +91,7 @@
 
 <script>
 // import dayjs from 'dayjs'
-import { getCustomer, downloadExcel } from '@/api/crm/index.js'
+import { getSaleList, getCustomer, downloadExcel } from '@/api/crm/index.js'
 
 import permission from '@/common/directive/permission' // 权限判断指令
 import { hasPermission, getToken, exportFile } from '@/common/conf/utils'
@@ -108,96 +108,7 @@ export default {
   mixins: [heightMix],
   data() {
     return {
-      pickerOptions: {
-        shortcuts: [
-          {
-            text: '本周',
-            onClick(picker) {
-              const end = new Date()
-              const start = new Date()
-              // console.log(start.getDay(), start.getDate(), 'start')
-              const thisDay = start.getDay() - 1
-              const thisDate = start.getDate()
-              if (thisDay !== 0) {
-                start.setDate(thisDate - thisDay)
-              }
-              picker.$emit('pick', [start, end])
-            },
-          },
-          {
-            text: '上周',
-            onClick(picker) {
-              const oDate = new Date()
-              oDate.setTime(oDate.getTime() - 3600 * 1000 * 24 * 7)
-
-              const day = oDate.getDay() - 1
-
-              const start = new Date()
-              const end = new Date()
-              if (day === 0) {
-                start.setDate(oDate.getDate())
-                end.setDate(oDate.getDate() + 6)
-              } else {
-                start.setTime(oDate.getTime() - 3600 * 1000 * 24 * day)
-                end.setTime(oDate.getTime() + 3600 * 1000 * 24 * (6 - day))
-              }
-              picker.$emit('pick', [start, end])
-            },
-          },
-          {
-            text: '本月',
-            onClick(picker) {
-              const end = new Date()
-              const start = new Date()
-              start.setDate(1)
-              picker.$emit('pick', [start, end])
-            },
-          },
-          {
-            text: '上月',
-            onClick(picker) {
-              const oDate = new Date()
-              let year = oDate.getFullYear()
-              const month = oDate.getMonth()
-              let start
-              let end
-              if (month === 0) {
-                year--
-                start = new Date(year, 11, 1)
-                end = new Date(year, 11, 31)
-              } else {
-                start = new Date(year, month - 1, 1)
-                end = new Date(year, month, 0)
-              }
-
-              picker.$emit('pick', [start, end])
-            },
-          },
-          {
-            text: '今年至今',
-            onClick(picker) {
-              const end = new Date()
-              const start = new Date(new Date().getFullYear(), 0)
-              picker.$emit('pick', [start, end])
-            },
-          },
-          {
-            text: '最近六个月',
-            onClick(picker) {
-              const end = new Date()
-              const start = new Date()
-              start.setMonth(start.getMonth() - 6)
-              picker.$emit('pick', [start, end])
-            },
-          },
-        ],
-      },
       listClear: [],
-      listLoading: false,
-      layout: 'total, sizes, prev, pager, next, jumper',
-      total: 0,
-      background: true,
-      elementLoadingText: '正在加载...',
       queryForm: {
         agentName: '',
         condition: '',
@@ -233,74 +144,7 @@ export default {
       },
       settleOptions: ['是', '否'],
       level: ['一级', '二级', '三级'],
-      userOptions: [
-        {
-          label: '自开发用户-已支付',
-          value: 1,
-        },
-        {
-          label: '自开发用户-未支付',
-          value: 2,
-        },
-        {
-          label: '协作用户-已支付',
-          value: 3,
-        },
-        {
-          label: '协作用户-未支付',
-          value: 4,
-        },
-        {
-          label: '团队用户-已支付',
-          value: 5,
-        },
-        {
-          label: '团队用户-未支付',
-          value: 6,
-        },
-      ],
-      typeOptions: [
-        {
-          label: '一转',
-          value: 1,
-        },
-        {
-          label: '二转',
-          value: 2,
-        },
-      ],
-      payOptions: [
-        {
-          label: '大羽有赞',
-          value: 1,
-        },
-        {
-          label: '大羽微店',
-          value: 2,
-        },
-        {
-          label: '大羽支付宝',
-          value: 3,
-        },
-        {
-          label: '大羽微信',
-          value: 4,
-        },
-        {
-          label: '大羽银行卡',
-          value: 5,
-        },
-        {
-          label: '观言对公',
-          value: 6,
-        },
-        {
-          label: '海风吹对公',
-          value: 7,
-        },
-      ],
-      errorLog: '',
-      isChange: false,
+      salesOptions: [],
     }
   },
   computed: {
@@ -325,9 +169,14 @@ export default {
     this.initHeight()
 
     // this.fetchData()
+    this.getSaleList()
   },
   methods: {
     hasPermission,
+    async getSaleList() {
+      const { data } = await getSaleList()
+      this.salesOptions = data
+    },
     async fetchData() {
       const params = {
         ...this.queryForm,
