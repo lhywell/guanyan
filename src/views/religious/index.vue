@@ -67,7 +67,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="成交产品总价" prop="price" />
+      <el-table-column label="成交产品总价" prop="price" width="120" />
       <el-table-column label="支付方式" prop="payMode" />
       <el-table-column label="客户微信号" prop="weixin" />
       <el-table-column label="客户微信名" prop="weixinName" />
@@ -78,6 +78,7 @@
       <el-table-column label="出生时间" prop="birthTime" />
       <el-table-column label="出生地" prop="birthAddressLabel" width="120" />
       <el-table-column label="电话号码" prop="customerPhone" />
+      <el-table-column label="身份证地址" prop="idCardAddress" />
       <el-table-column label="现居地" prop="liveAddress" />
       <el-table-column label="邮寄地址" prop="mailAddress" />
     </el-table>
