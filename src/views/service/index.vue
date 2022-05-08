@@ -14,7 +14,7 @@
         />
       </el-form-item>
       <el-form-item label="转化类型">
-        <el-select v-model="queryForm.type" placeholder="请选择" clearable>
+        <el-select v-model="queryForm.type" placeholder="请选择" disabled>
           <el-option
             v-for="(item, index) in typeOptions"
             :key="index"
@@ -107,7 +107,7 @@ export default {
       list: [],
       queryForm: {
         dealDate: '',
-        type: '',
+        type: 2,
         productGroup: '',
         page: {
           size: 20,
