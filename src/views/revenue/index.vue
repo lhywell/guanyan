@@ -228,7 +228,7 @@ export default {
         }
         if (column.property === 'price') {
           const values = data.map(item => Number(item[column.property]))
-          window.console.log(values, data, column)
+          // window.console.log(values, data, column)
           if (!values.every(value => Number.isNaN(value))) {
             sums[index] = values.reduce((prev, curr) => {
               const value = Number(curr)
@@ -251,8 +251,9 @@ export default {
     async handleExport() {
       try {
         const res = await downloadExcel()
+
         if (res) {
-          await exportFile(res, '结算管理模板', 'excel')
+          await exportFile(res, '流水', 'excel')
         }
       } catch (e) {
         window.console.log(1, e)

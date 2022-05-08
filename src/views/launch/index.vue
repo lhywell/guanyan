@@ -186,7 +186,7 @@ export default {
         }
         if (column.property === 'price') {
           const values = data.map(item => Number(item[column.property]))
-          window.console.log(values, data, column)
+          // window.console.log(values, data, column)
           if (!values.every(value => Number.isNaN(value))) {
             sums[index] = values.reduce((prev, curr) => {
               const value = Number(curr)
