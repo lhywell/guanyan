@@ -47,11 +47,12 @@ export async function addCustomer(data = {}) {
   })
 }
 
-// 下载
-export async function downloadExcel(data = {}) {
+// 下载excel
+export function downloadExcel(data) {
   return request({
-    url: `${baseURL}/customer/add`,
-    method: 'post',
+    url: `${baseURL}/customer/download`,
+    method: 'get',
     data,
+    responseType: 'blob',
   })
 }
