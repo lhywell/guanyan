@@ -129,12 +129,25 @@
       @current-change="handleCurrentChange"
       @size-change="handleSizeChange"
     />
+    <el-dialog
+      title="请确认"
+      :visible.sync="dialogVisible"
+      width="30%"
+      :before-close="handleClose"
+      :close-on-click-modal="false"
+    >
+      确定删除所选记录吗，删除后将无法恢复？
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取消</el-button>
+        <el-button type="danger" @click="deleteRow">确认删除</el-button>
+      </span>
+    </el-dialog>
   </el-main>
 </template>
 
 <script>
 // import dayjs from 'dayjs'
-import { getSaleList, getCustomer, downloadExcel } from '@/api/crm/index.js'
+import { getSaleList, getCustomer, deleteCustomer, downloadExcel } from '@/api/crm/index.js'
 
 import permission from '@/common/directive/permission' // 权限判断指令
 import { hasPermission, exportFile } from '@/common/conf/utils'
@@ -165,6 +178,7 @@ export default {
       },
       salesOptions: [],
       listLoading: false,
+      dialogVisible: false,
     }
   },
   computed: {
@@ -252,7 +266,26 @@ export default {
       return sums
     },
     handleEdit() {},
-    handleDelete() {},
+    handleDelete(row) {
+      this.currentId = row._id
+      this.dialogVisible = true
+    },
+    handleClose() {
+      this.dialogVisible = false
+    },
+    async deleteRow() {
+      try {
+        await deleteCustomer({
+          id: this.currentId,
+        })
+
+        this.$message.success('删除成功')
+        this.fetchData()
+        this.dialogVisible = false
+      } catch (error) {
+        window.console.log(error)
+      }
+    },
     async handleExport() {
       try {
         const res = await downloadExcel()

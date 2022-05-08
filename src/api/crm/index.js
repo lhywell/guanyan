@@ -47,6 +47,15 @@ export async function addCustomer(data = {}) {
   })
 }
 
+// 删除客户
+export async function deleteCustomer(data = {}) {
+  return request({
+    url: `${baseURL}/customer/delete`,
+    method: 'get',
+    data,
+  })
+}
+
 // 下载excel
 export function downloadExcel(data) {
   return request({
