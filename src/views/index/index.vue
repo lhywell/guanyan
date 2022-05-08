@@ -219,6 +219,14 @@
           style="width: 200px"
         />
       </el-form-item>
+      <el-form-item label="身份证地址">
+        <el-input
+          v-model="queryForm.idCardAddress"
+          placeholder="请输入"
+          clearable
+          style="width: 480px"
+        />
+      </el-form-item>
       <el-form-item label="现居地">
         <el-input
           v-model="queryForm.liveAddress"
@@ -284,6 +292,7 @@ export default {
         birthAddressCode: '',
         customerPhone: '',
         liveAddress: '',
+        idCardAddress: '',
         mailAddress: '',
       },
       productOneOptions: [],
