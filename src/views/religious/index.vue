@@ -225,7 +225,7 @@ export default {
       try {
         const res = await downloadExcel()
         if (res) {
-          await exportFile(res, '结算管理模板', 'excel')
+          await exportFile(res, '法事', 'excel')
         }
       } catch (e) {
         window.console.log(1, e)
