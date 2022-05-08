@@ -4,7 +4,7 @@
     <el-form class="search-form" :model="queryForm" inline>
       <el-form-item label="成交日期">
         <el-date-picker
-          v-model="queryForm.dateStr"
+          v-model="queryForm.dealDate"
           placeholder="请选择日期"
           type="daterange"
           value-format="yyyy-MM-dd"
@@ -24,7 +24,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="成交产品">
-        <el-select v-model="queryForm.product" placeholder="请选择" disabled>
+        <el-select v-model="queryForm.productGroup" placeholder="请选择" disabled>
           <el-option
             v-for="(item, index) in productOptions"
             :key="index"
@@ -44,7 +44,7 @@
       v-if="height"
       ref="tableSort"
       v-loading="listLoading"
-      :data="listClear"
+      :data="list"
       :element-loading-text="elementLoadingText"
       :height="height"
     >
@@ -53,8 +53,24 @@
           <span v-text="getIndex(scope.$index, queryForm.page.current, queryForm.page.size)" />
         </template>
       </el-table-column>
-      <el-table-column label="代理商名称" prop="agentName" />
-      <el-table-column label="累计电量(MWh)" prop="totalUsedPower" />
+      <el-table-column label="加粉日期" prop="newDate" />
+      <el-table-column label="成交日期" prop="dealDate" />
+      <el-table-column label="咨询师" prop="saleName" />
+      <el-table-column label="成交手机" prop="dealPhone" />
+      <el-table-column label="转化类型" prop="type" />
+      <el-table-column label="成交产品" prop="product" />
+      <el-table-column label="支付方式" prop="payMode" />
+      <el-table-column label="客户微信号" prop="weixin" />
+      <el-table-column label="客户微信名" prop="weixinName" />
+      <el-table-column label="真实姓名" prop="realName" />
+      <el-table-column label="性别" prop="sex" />
+      <el-table-column label="阳历出生日" prop="birthdayX" />
+      <el-table-column label="阴历出生日" prop="birthdayY" />
+      <el-table-column label="出生时间" prop="birthTime" />
+      <el-table-column label="出生地" prop="birthAddressLabel" />
+      <el-table-column label="电话号码" prop="customerPhone" />
+      <el-table-column label="现居地" prop="liveAddress" />
+      <el-table-column label="邮寄地址" prop="mailAddress" />
     </el-table>
 
     <el-pagination
@@ -74,7 +90,7 @@
 import { getCustomer, downloadExcel } from '@/api/crm/index.js'
 
 import permission from '@/common/directive/permission' // 权限判断指令
-import { hasPermission, getToken, exportFile } from '@/common/conf/utils'
+import { hasPermission, exportFile } from '@/common/conf/utils'
 // 权限判断方法
 import heightMix from '@/mixins/height'
 
@@ -88,68 +104,17 @@ export default {
   mixins: [heightMix],
   data() {
     return {
-      listClear: [],
+      list: [],
       queryForm: {
-        product: 3,
+        dealDate: '',
         type: 2,
+        productGroup: 3,
         page: {
           size: 20,
           current: 1,
         },
       },
-      form: {
-        date: ['', ''],
-        file: '',
-      },
-      drawLoading: false,
-      drawQueryForm: {
-        page: {
-          size: 20,
-          current: 1,
-        },
-      },
-      headers: { token: getToken() },
-      params: {},
-      file: null,
-      uploadData: {},
-      drawer: false,
-      direction: 'rtl',
-      listDraw: [],
-      agentType: '',
-      drawTotal: 0,
-      listDetail: [],
-      dialogVisible: false,
-      queryFormSecond: {
-        customerName: '',
-      },
-      settleOptions: ['是', '否'],
-      level: ['一级', '二级', '三级'],
-      userOptions: [
-        {
-          label: '自开发用户-已支付',
-          value: 1,
-        },
-        {
-          label: '自开发用户-未支付',
-          value: 2,
-        },
-        {
-          label: '协作用户-已支付',
-          value: 3,
-        },
-        {
-          label: '协作用户-未支付',
-          value: 4,
-        },
-        {
-          label: '团队用户-已支付',
-          value: 5,
-        },
-        {
-          label: '团队用户-未支付',
-          value: 6,
-        },
-      ],
+      listLoading: false,
       productOptions: [
         {
           label: '灵宝',
@@ -164,8 +129,6 @@ export default {
           value: 3,
         },
       ],
-      errorLog: '',
-      isChange: false,
     }
   },
   computed: {
@@ -205,9 +168,7 @@ export default {
       const { data } = await getCustomer(params)
       const list = data.records
       this.total = data.total
-      this.listClear = list
-
-      this.isChange = false
+      this.list = list
 
       setTimeout(() => {
         this.listLoading = false
