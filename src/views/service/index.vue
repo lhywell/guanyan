@@ -85,6 +85,7 @@
       <el-table-column label="身份证地址" prop="idCardAddress" />
       <el-table-column label="现居地" prop="liveAddress" />
       <el-table-column label="邮寄地址" prop="mailAddress" />
+      <el-table-column label="备注" prop="comment" />
     </el-table>
 
     <el-pagination

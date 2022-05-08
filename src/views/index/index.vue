@@ -243,6 +243,9 @@
           style="width: 480px"
         />
       </el-form-item>
+      <el-form-item label="备注">
+        <el-input v-model="queryForm.comment" placeholder="请输入" clearable style="width: 480px" />
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="submitForm('queryForm')">录入</el-button>
       </el-form-item>
@@ -294,6 +297,7 @@ export default {
         liveAddress: '',
         idCardAddress: '',
         mailAddress: '',
+        comment: '',
       },
       productOneOptions: [],
       productTwoOptions: [],
