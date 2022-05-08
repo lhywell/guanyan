@@ -7,19 +7,24 @@ export default {
       this.initTableHeight()
     }, 700)
   },
+  updated() {
+    this.$nextTick(() => {
+      this.$refs.tableSort.doLayout()
+    })
+  },
   methods: {
     initTableHeight() {
-      let refTable = this.$refs.tableList?.$el || this.$refs.tableSort?.$el
+      const refTable = this.$refs.tableList?.$el || this.$refs.tableSort?.$el
       // refTable = document.getElementById('tableList')
-      const innerHeight = window.innerHeight
+      const { innerHeight } = window
       if (refTable) {
-        const top = refTable.getBoundingClientRect().top
+        const { top } = refTable.getBoundingClientRect()
         // const refPaging = document.getElementById('paging')
         const refPaging = this.$refs.paging?.$el
         if (refPaging) {
           const pagHeight = refPaging.getBoundingClientRect().height
           this.TABLEHEIGHT = innerHeight - top - pagHeight - 30
-          console.log(this.$route?.path, this.TABLEHEIGHT)
+          // console.log(this.$route?.path, this.TABLEHEIGHT)
           return
         }
         this.TABLEHEIGHT = innerHeight - top - 30

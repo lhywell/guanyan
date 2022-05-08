@@ -8,7 +8,7 @@
           placeholder="请选择日期"
           type="daterange"
           value-format="yyyy-MM-dd"
-          :clearable="false"
+          :clearable="true"
           :picker-options="pickerOptions"
           style="width: 230px"
         />
@@ -43,6 +43,8 @@
     <el-table
       v-if="height"
       ref="tableSort"
+      :show-summary="true"
+      :summary-method="getSummaries"
       v-loading="listLoading"
       :data="list"
       :element-loading-text="elementLoadingText"
@@ -65,6 +67,7 @@
           </div>
         </template>
       </el-table-column>
+      <el-table-column label="成交产品总价" prop="price" />
       <el-table-column label="支付方式" prop="payMode" />
       <el-table-column label="客户微信号" prop="weixin" />
       <el-table-column label="客户微信名" prop="weixinName" />
@@ -99,6 +102,7 @@ import permission from '@/common/directive/permission' // 权限判断指令
 import { hasPermission, exportFile } from '@/common/conf/utils'
 // 权限判断方法
 import heightMix from '@/mixins/height'
+import tableHeight from '@/mixins/tableHeight'
 
 // const today = dayjs().format('YYYY-MM-DD')
 // const startDate = dayjs().startOf('month').format('YYYY-MM-DD')
@@ -107,7 +111,7 @@ import heightMix from '@/mixins/height'
 // console.log(height)
 export default {
   directives: { permission },
-  mixins: [heightMix],
+  mixins: [heightMix, tableHeight],
   data() {
     return {
       list: [],
@@ -187,6 +191,34 @@ export default {
     handleCurrentChange(val) {
       this.queryForm.page.current = val
       this.fetchData()
+    },
+    getSummaries(param) {
+      const { columns, data } = param
+      const sums = []
+      columns.forEach((column, index) => {
+        if (index === 0) {
+          sums[index] = '总价'
+          return
+        }
+        if (column.property === 'price') {
+          const values = data.map(item => Number(item[column.property]))
+          window.console.log(values, data, column)
+          if (!values.every(value => Number.isNaN(value))) {
+            sums[index] = values.reduce((prev, curr) => {
+              const value = Number(curr)
+              if (!Number.isNaN(value)) {
+                return prev + curr
+              }
+              return prev
+            }, 0)
+            sums[index] += ' 元'
+          } else {
+            sums[index] = 'N/A'
+          }
+        }
+      })
+      // window.console.log(sums)
+      return sums
     },
     async handleExport() {
       try {
