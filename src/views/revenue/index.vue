@@ -163,8 +163,9 @@ export default {
   },
   mounted() {
     this.initHeight()
-    // this.fetchData()
+
     this.getSaleList()
+    this.fetchData()
   },
   methods: {
     hasPermission,

@@ -166,7 +166,7 @@ export default {
   mounted() {
     this.initHeight()
 
-    // this.fetchData()
+    this.fetchData()
   },
   methods: {
     hasPermission,
