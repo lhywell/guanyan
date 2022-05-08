@@ -72,7 +72,11 @@
       <el-table-column label="客户微信号" prop="weixin" />
       <el-table-column label="客户微信名" prop="weixinName" />
       <el-table-column label="真实姓名" prop="realName" />
-      <el-table-column label="性别" prop="sex" />
+      <el-table-column label="性别" prop="sex">
+        <template #default="{ row }">
+          <div>{{ row.sex === 1 ? '男' : '女' }}</div>
+        </template>
+      </el-table-column>
       <el-table-column label="阳历出生日" prop="birthdayX" width="120" />
       <el-table-column label="阴历出生日" prop="birthdayY" width="120" />
       <el-table-column label="出生时间" prop="birthTime" />
