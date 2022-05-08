@@ -210,7 +210,9 @@ export default {
     },
     async handleExport() {
       try {
-        const res = await downloadExcel()
+        const res = await downloadExcel({
+          page: 'toufang',
+        })
         if (res) {
           await exportFile(res, '投放', 'excel')
         }

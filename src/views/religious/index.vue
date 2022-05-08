@@ -227,7 +227,9 @@ export default {
     },
     async handleExport() {
       try {
-        const res = await downloadExcel()
+        const res = await downloadExcel({
+          page: 'fashi',
+        })
         if (res) {
           await exportFile(res, '法事', 'excel')
         }
