@@ -157,6 +157,18 @@
         <el-button type="danger" @click="deleteRow">确认删除</el-button>
       </span>
     </el-dialog>
+    <!-- <el-dialog
+      title="编辑"
+      :visible.sync="dialogEditVisible"
+      width="50%"
+      :close-on-click-modal="false"
+    >
+
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogEditVisible = false">取消</el-button>
+        <el-button type="primary" @click="submitForm('editForm')">确认</el-button>
+      </span>
+    </el-dialog> -->
     <el-dialog
       title="补差价"
       :visible.sync="dialogPriceVisible"
@@ -186,6 +198,7 @@
 
 <script>
 // import dayjs from 'dayjs'
+import { regionData } from 'element-china-area-data'
 import {
   getSaleList,
   getCustomer,
@@ -224,9 +237,39 @@ export default {
       priceForm: {
         num: 0,
       },
+      editForm: {
+        newDate: '',
+        dealDate: '',
+        sale: '',
+        dealPhone: '',
+        type: 1,
+        productOne: '',
+        productTwo: [
+          {
+            value: '',
+          },
+        ],
+        pay: '',
+
+        weixin: '',
+        weixinName: '',
+        realName: '',
+        sex: '',
+        birthdayX: '',
+        birthdayY: '',
+        birthTime: '',
+        birthAddressCode: '',
+        customerPhone: '',
+        liveAddress: '',
+        idCardAddress: '',
+        mailAddress: '',
+        comment: '',
+      },
+      addressOptions: regionData,
       salesOptions: [],
       listLoading: false,
       dialogVisible: false,
+      dialogEditVisible: false,
       dialogPriceVisible: false,
     }
   },
@@ -313,6 +356,15 @@ export default {
       })
       // window.console.log(sums)
       return sums
+    },
+    handleEdit(row) {
+      this.currentRow = row
+      this.editForm = row
+      this.editForm.sale = `${row.saleId}_${row.saleName}`
+      this.editForm.pay = `${row.payId}_${row.payMode}`
+      this.editForm.birthAddressCode = row.birthAddressCode
+
+      this.dialogEditVisible = true
     },
     handleDelete(row) {
       this.currentId = row._id
