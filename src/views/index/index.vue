@@ -349,8 +349,7 @@ export default {
       const { data } = await getProductTwo()
       this.productTwoOptions = data
     },
-    typeChange(e) {
-      window.console.log(e, typeof e)
+    typeChange() {
       this.queryForm.productOne = ''
       this.queryForm.productTwo = [
         {
