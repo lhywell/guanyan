@@ -96,9 +96,24 @@
       <el-table-column label="现居地" prop="liveAddress" />
       <el-table-column label="邮寄地址" prop="mailAddress" />
       <el-table-column label="备注" prop="comment" />
+      <el-table-column label="补差价" prop="priceAdjustment">
+        <template #default="{ row }">
+          <div v-for="(item, index) in row.priceAdjustment" :key="index">
+            <div>{{ item }}</div>
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" width="260" align="center">
         <template #default="{ $index, row }">
           <div>
+            <el-button
+              type="primary"
+              plain
+              @click="handlePrice(row, $index)"
+              v-permission="['admin', 'platformer']"
+            >
+              补差价
+            </el-button>
             <el-button
               type="primary"
               plain
@@ -142,12 +157,42 @@
         <el-button type="danger" @click="deleteRow">确认删除</el-button>
       </span>
     </el-dialog>
+    <el-dialog
+      title="补差价"
+      :visible.sync="dialogPriceVisible"
+      width="30%"
+      :close-on-click-modal="false"
+    >
+      <el-form ref="priceForm" :model="priceForm" class="search-form" label-width="120px">
+        <el-form-item
+          label="金额"
+          prop="num"
+          required
+          :rules="[{ required: true, message: '请输入数字', trigger: 'blur' }]"
+        >
+          <el-input-number size="medium" v-model="priceForm.num" :step="1" />
+          <div style="margin-left: -43px; color: #fe6e6d">
+            注意：提交后产品总价会重新计算，确认无误后请点击提交
+          </div>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogPriceVisible = false">取消</el-button>
+        <el-button type="primary" @click="submitForm('priceForm')">提交</el-button>
+      </span>
+    </el-dialog>
   </el-main>
 </template>
 
 <script>
 // import dayjs from 'dayjs'
-import { getSaleList, getCustomer, deleteCustomer, downloadExcel } from '@/api/crm/index.js'
+import {
+  getSaleList,
+  getCustomer,
+  deleteCustomer,
+  downloadExcel,
+  editPrice,
+} from '@/api/crm/index.js'
 
 import permission from '@/common/directive/permission' // 权限判断指令
 import { hasPermission, exportFile } from '@/common/conf/utils'
@@ -176,9 +221,13 @@ export default {
           current: 1,
         },
       },
+      priceForm: {
+        num: 0,
+      },
       salesOptions: [],
       listLoading: false,
       dialogVisible: false,
+      dialogPriceVisible: false,
     }
   },
   computed: {
@@ -265,7 +314,6 @@ export default {
       // window.console.log(sums)
       return sums
     },
-    handleEdit() {},
     handleDelete(row) {
       this.currentId = row._id
       this.dialogVisible = true
@@ -296,6 +344,28 @@ export default {
       } catch (e) {
         window.console.log(1, e)
       }
+    },
+    submitForm(formName) {
+      this.$refs[formName].validate(async valid => {
+        if (valid) {
+          this.priceForm.id = this.currentId
+          this.priceForm.price = this.currentPrice
+          await editPrice(this.priceForm)
+
+          this.$message.success('提交成功')
+
+          this.fetchData()
+          this.dialogPriceVisible = false
+          return true
+        }
+        window.console.log('error submit!!', this.priceForm)
+        return false
+      })
+    },
+    handlePrice(row) {
+      this.currentId = row._id
+      this.currentPrice = row.price
+      this.dialogPriceVisible = true
     },
   },
 }

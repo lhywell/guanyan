@@ -56,6 +56,24 @@ export async function deleteCustomer(data = {}) {
   })
 }
 
+// 补差价金额
+export async function editPrice(data = {}) {
+  return request({
+    url: `${baseURL}/price/update`,
+    method: 'post',
+    data,
+  })
+}
+
+// 编辑客户信息
+export async function editCustomer(data = {}) {
+  return request({
+    url: `${baseURL}/customer/update`,
+    method: 'post',
+    data,
+  })
+}
+
 // 下载excel
 export function downloadExcel(data) {
   return request({
