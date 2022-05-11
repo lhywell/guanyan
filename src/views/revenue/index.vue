@@ -84,7 +84,7 @@
       <el-table-column label="真实姓名" prop="realName" />
       <el-table-column label="性别" prop="sex">
         <template #default="{ row }">
-          <div>{{ row.sex === 1 ? '男' : '女' }}</div>
+          <div v-if="row.sex">{{ row.sex === 1 ? '男' : '女' }}</div>
         </template>
       </el-table-column>
       <el-table-column label="阳历出生日" prop="birthdayX" width="120" />
@@ -502,9 +502,13 @@ export default {
     },
     handleChange() {
       this.$nextTick(() => {
-        this.editForm.birthAddressLabel = this.$refs.cascader
-          .getCheckedNodes()[0]
-          .pathLabels.join('/')
+        if (this.$refs.cascader.getCheckedNodes().length === 0) {
+          this.editForm.birthAddressLabel = ''
+        } else {
+          this.editForm.birthAddressLabel = this.$refs.cascader
+            .getCheckedNodes()[0]
+            ?.pathLabels.join('/')
+        }
       })
     },
     handleDelete(row) {

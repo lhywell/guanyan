@@ -74,7 +74,7 @@
       <el-table-column label="真实姓名" prop="realName" />
       <el-table-column label="性别" prop="sex">
         <template #default="{ row }">
-          <div>{{ row.sex === 1 ? '男' : '女' }}</div>
+          <div v-if="row.sex">{{ row.sex === 1 ? '男' : '女' }}</div>
         </template>
       </el-table-column>
       <el-table-column label="阳历出生日" prop="birthdayX" width="120" />
