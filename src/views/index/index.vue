@@ -292,7 +292,7 @@ export default {
         birthdayX: '',
         birthdayY: '',
         birthTime: '',
-        birthAddressCode: '',
+        birthAddressCode: [],
         customerPhone: '',
         liveAddress: '',
         idCardAddress: '',
@@ -379,7 +379,6 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(async valid => {
         if (valid) {
-          // window.console.log('222', this.queryForm)
           // 补差价为空数组
           this.queryForm.priceAdjustment = []
           const res = await addCustomer(this.queryForm)
