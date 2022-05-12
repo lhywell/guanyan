@@ -110,7 +110,7 @@ export function getToken(key) {
 }
 
 export function setToken(token) {
-  return setStorage(tokenKey, token)
+  return setStorage(tokenKey, `Bearer ${token}`)
 }
 
 export function removeToken() {

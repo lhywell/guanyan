@@ -37,7 +37,7 @@ switch (process.env.http_env) {
 }
 
 const setting = {
-  tokenKey: 'token',
+  tokenKey: 'authorization',
   appName: '观言营销平台',
   isDev,
   // 开发以及部署时的URL

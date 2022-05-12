@@ -84,7 +84,7 @@ const actions = {
       removeStorage('username')
       removeStorage('password')
       removeStorage('rememberme')
-      removeStorage('token')
+      removeStorage('authorization')
       return res
     })
   },
