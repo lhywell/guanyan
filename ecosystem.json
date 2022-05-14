@@ -22,7 +22,7 @@
       "env": {
         "NODE_ENV": "production"
       },
-      "post-deploy": "npm install && npm run build"
+      "post-deploy": "yarn setup && npm run build"
     }
   }
 }
