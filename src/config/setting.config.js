@@ -29,7 +29,7 @@ switch (process.env.http_env) {
     publicPath = '/'
     break
   case 'prod':
-    publicPath = '/dist'
+    publicPath = '/'
     break
   default:
     publicPath = '/'
