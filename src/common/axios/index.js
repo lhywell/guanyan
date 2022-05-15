@@ -99,14 +99,17 @@ instance.interceptors.response.use(
     if (Object.prototype.toString.call(data) === '[object Blob]') {
       return data
     }
+
     if (status === 200) {
       // 401：token失效
       if (data.code === 401) {
         toLogin()
       } else if (data.code === 200) {
         return data
+      } else {
+        return Promise.reject(data)
+        // return data
       }
-      return Promise.reject(data)
     }
     return Promise.reject(data)
   },
@@ -115,9 +118,10 @@ instance.interceptors.response.use(
       if (error.response.data.code === '401') {
         toLogin()
       }
-    } catch (e) {}
-    // 如果返回，会再进入实例的catch回调中。
-    return Promise.reject(error)
+    } catch (e) {
+      // 如果返回，会再进入实例的catch回调中。
+    }
+    // return Promise.reject(error)
   },
 )
 
@@ -144,8 +148,7 @@ const request = option =>
         })
         .catch(error => {
           Message.error(error)
-
-          reject(error)
+          // reject(error)
         })
         .finally(() => {
           checkRes.next()
