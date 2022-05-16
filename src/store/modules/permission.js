@@ -11,7 +11,6 @@ function hasPermission(roles, route) {
 // 通过递归过滤异步路由表
 export function filterAsyncRoutes(routes, roles) {
   const res = []
-
   routes.forEach(route => {
     const tmp = { ...route }
     if (hasPermission(roles, tmp)) {
@@ -49,7 +48,11 @@ const actions = {
         // 权限判断后，页面登录后路由跳转到第一个路由
         accessedRoutes.some(route => {
           if (route.children[0] && route.children[0].path) {
-            route.redirect = route.children[0] && route.children[0].path
+            if (roles[0] !== 'launcher') {
+              route.redirect = '/company'
+            } else {
+              route.redirect = `/launch/index`
+            }
             return true
           }
           return false

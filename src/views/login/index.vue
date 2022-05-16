@@ -43,8 +43,8 @@
 <script>
 import { getStorage, setStorage, removeStorage } from '@/common/conf/utils'
 import { appName } from '@/config'
-
 // const md5 = require('js-md5')
+// import { getUserInfo } from '@/api/usermanage'
 
 export default {
   name: 'Login',
@@ -98,7 +98,9 @@ export default {
           username: this.username,
           password: this.password,
         })
-        .then(() => {
+        .then(async () => {
+          // eslint-disable-next-line no-debugger
+          // debugger
           setStorage('username', this.username)
 
           if (this.rememberme) {
@@ -110,13 +112,36 @@ export default {
           }
 
           // 登录重定向
-          if (this.$route.query.redirect) {
+          // const res = await getUserInfo()
+          const { data } = await this.$store.dispatch('user/getInfo')
+          const ary = ['系统管理员', '平台管理员', '录入管理员', '投放管理员']
+          const aryEn = ['admin', 'platformer', 'inputer', 'launcher']
+          const index = ary.findIndex(d => d === data.roleName)
+
+          // 根据角色生成可访问的路由
+          await this.$store.dispatch('user/changeRoles', [aryEn[index]])
+          if (data.roleName === '投放管理员') {
+            this.$router.push({
+              path: '/launch/index',
+            })
+          } else if (this.$route.query.redirect) {
             this.$router.push({ path: this.$route.query.redirect })
           } else {
             this.$router.push({
               path: '/',
             })
           }
+
+          // 登录重定向
+          // if (this.$route.query.redirect) {
+          //   window.console.log(222)
+          //   this.$router.push({ path: this.$route.query.redirect })
+          // } else {
+          //   window.console.log(222)
+          //   this.$router.push({
+          //     path: '/',
+          //   })
+          // }
         })
         .catch(res => {
           this.errorTxt = res.message || this.errTxt

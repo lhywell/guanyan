@@ -103,7 +103,7 @@ export const asyncRoutes = [
     children: [
       {
         path: 'index',
-        component: () => import('@/views/launch'),
+        component: () => import('@/views/launch/index'),
         name: 'launch',
         meta: {
           title: '投放管理',

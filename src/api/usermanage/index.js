@@ -2,6 +2,15 @@
 import request from '@/common/axios/index'
 import { baseURL } from '@/config'
 
+// 获取用户信息
+export async function getUserInfo(data = {}) {
+  return request({
+    url: `${baseURL}/user/info`,
+    method: 'get',
+    data,
+  })
+}
+
 // 分页查询用户列表
 export async function getUserlist(data = {}) {
   return request({
