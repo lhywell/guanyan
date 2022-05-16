@@ -64,7 +64,7 @@ export const asyncRoutes = [
   {
     path: '/',
     name: 'content',
-    meta: { title: '内容管理', icon: 'el-icon-s-home' },
+    meta: { title: '内容管理', icon: 'el-icon-s-home', roles: ['admin', 'platformer', 'inputer'] },
     component: Layout,
     redirect: '/company',
     children: [
