@@ -425,7 +425,7 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(async valid => {
         if (valid) {
-          // 补差价为空数组
+          // 补差价为否
           this.queryForm.priceAdjustment = false
           const birthdayX = `${this.queryForm.birthdayX_year}-${this.queryForm.birthdayX_month}-${this.queryForm.birthdayX_day}`
           const birthdayXR = dayjs(birthdayX).format('YYYY-MM-DD')
@@ -441,14 +441,47 @@ export default {
           delete this.queryForm.birthdayY_month
           delete this.queryForm.birthdayY_day
 
-          const res = await addCustomer(this.queryForm)
+          await addCustomer(this.queryForm)
 
-          this.$message.success('录入成功', res)
+          this.$message.success('录入成功')
+          this.resetForm()
           return true
         }
         window.console.log('error submit!!', this.queryForm)
         return false
       })
+    },
+    resetForm() {
+      this.queryForm = {
+        newDate: '',
+        dealDate: '',
+        sale: '',
+        dealPhone: '',
+        type: 1,
+        productOne: '',
+        productTwo: [
+          {
+            value: '',
+          },
+        ],
+        pay: '',
+
+        weixin: '',
+        weixinName: '',
+        realName: '',
+        sex: '',
+        birthdayX: '',
+        birthdayY: '',
+        birthdayX_year: '2000',
+        birthdayY_year: '2000',
+        birthTime: '',
+        birthAddressCode: [],
+        customerPhone: '',
+        liveAddress: '',
+        idCardAddress: '',
+        mailAddress: '',
+        comment: '',
+      }
     },
   },
 }
