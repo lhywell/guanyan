@@ -171,23 +171,61 @@
       </el-form-item>
       <el-form-item label="阳历出生日">
         <el-date-picker
-          v-model="queryForm.birthdayX"
-          placeholder="请选择日期"
-          type="date"
-          value-format="yyyy-MM-dd"
+          v-model="queryForm.birthdayX_year"
+          type="year"
+          placeholder="某"
           :clearable="true"
-          style="width: 200px"
+          style="width: 96px"
+          value-format="yyyy"
         />
+        <span class="demonstration">年</span>
+        <el-select
+          v-model="queryForm.birthdayX_month"
+          placeholder="某"
+          :clearable="true"
+          style="width: 70px"
+        >
+          <el-option v-for="(item, index) in dateMonth" :key="index" :label="item" :value="item" />
+        </el-select>
+        <span class="demonstration">月</span>
+        <el-select
+          v-model="queryForm.birthdayX_day"
+          placeholder="某"
+          :clearable="true"
+          style="width: 70px"
+        >
+          <el-option v-for="(item, index) in dateDay" :key="index" :label="item" :value="item" />
+        </el-select>
+        <span class="demonstration">日</span>
       </el-form-item>
       <el-form-item label="阴历出生日">
         <el-date-picker
-          v-model="queryForm.birthdayY"
-          placeholder="请选择日期"
-          type="date"
-          value-format="yyyy-MM-dd"
+          v-model="queryForm.birthdayY_year"
+          type="year"
+          placeholder="某"
           :clearable="true"
-          style="width: 200px"
+          style="width: 96px"
+          value-format="yyyy"
         />
+        <span class="demonstration">年</span>
+        <el-select
+          v-model="queryForm.birthdayY_month"
+          placeholder="某"
+          :clearable="true"
+          style="width: 70px"
+        >
+          <el-option v-for="(item, index) in dateMonth" :key="index" :label="item" :value="item" />
+        </el-select>
+        <span class="demonstration">月</span>
+        <el-select
+          v-model="queryForm.birthdayY_day"
+          placeholder="某"
+          :clearable="true"
+          style="width: 70px"
+        >
+          <el-option v-for="(item, index) in dateDay" :key="index" :label="item" :value="item" />
+        </el-select>
+        <span class="demonstration">日</span>
       </el-form-item>
       <el-form-item label="出生时间">
         <el-time-picker
@@ -255,6 +293,7 @@
 
 <script>
 import { regionData } from 'element-china-area-data'
+import dayjs from 'dayjs'
 import { getSaleList, addCustomer, getProductOne, getProductTwo } from '@/api/crm/index.js'
 
 import permission from '@/common/directive/permission' // 权限判断指令
@@ -291,6 +330,8 @@ export default {
         sex: '',
         birthdayX: '',
         birthdayY: '',
+        birthdayX_year: '2000',
+        birthdayY_year: '2000',
         birthTime: '',
         birthAddressCode: [],
         customerPhone: '',
@@ -308,6 +349,11 @@ export default {
         },
       ],
       salesOptions: [],
+      dateMonth: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+      dateDay: [
+        1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25,
+        26, 27, 28, 29, 30, 31,
+      ],
     }
   },
   computed: {
@@ -380,7 +426,21 @@ export default {
       this.$refs[formName].validate(async valid => {
         if (valid) {
           // 补差价为空数组
-          this.queryForm.priceAdjustment = []
+          this.queryForm.priceAdjustment = false
+          const birthdayX = `${this.queryForm.birthdayX_year}-${this.queryForm.birthdayX_month}-${this.queryForm.birthdayX_day}`
+          const birthdayXR = dayjs(birthdayX).format('YYYY-MM-DD')
+          this.queryForm.birthdayX = birthdayXR === 'Invalid Date' ? '' : birthdayXR
+
+          const birthdayY = `${this.queryForm.birthdayY_year}-${this.queryForm.birthdayY_month}-${this.queryForm.birthdayY_day}`
+          const birthdayYR = dayjs(birthdayY).format('YYYY-MM-DD')
+          this.queryForm.birthdayY = birthdayYR === 'Invalid Date' ? '' : birthdayYR
+          delete this.queryForm.birthdayX_year
+          delete this.queryForm.birthdayX_month
+          delete this.queryForm.birthdayX_day
+          delete this.queryForm.birthdayY_year
+          delete this.queryForm.birthdayY_month
+          delete this.queryForm.birthdayY_day
+
           const res = await addCustomer(this.queryForm)
 
           this.$message.success('录入成功', res)
@@ -396,5 +456,8 @@ export default {
 <style lang="scss" scope>
 .el-icon-remove {
   color: #ff7777;
+}
+.demonstration {
+  margin: 0 6px;
 }
 </style>
