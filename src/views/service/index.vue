@@ -86,11 +86,9 @@
       <el-table-column label="现居地" prop="liveAddress" />
       <el-table-column label="邮寄地址" prop="mailAddress" />
       <el-table-column label="备注" prop="comment" />
-      <el-table-column label="补差价" prop="priceAdjustment">
+      <el-table-column label="是否补差价" prop="priceAdjustment">
         <template #default="{ row }">
-          <div v-for="(item, index) in row.priceAdjustment" :key="index">
-            <div>{{ item }}</div>
-          </div>
+          <div v-if="row.priceAdjustment" class="patch">补</div>
         </template>
       </el-table-column>
       <el-table-column label="创建时间" prop="createTime" />

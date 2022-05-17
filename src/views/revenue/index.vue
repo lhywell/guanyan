@@ -96,11 +96,9 @@
       <el-table-column label="现居地" prop="liveAddress" />
       <el-table-column label="邮寄地址" prop="mailAddress" />
       <el-table-column label="备注" prop="comment" />
-      <el-table-column label="补差价" prop="priceAdjustment">
+      <el-table-column label="是否补差价" prop="priceAdjustment">
         <template #default="{ row }">
-          <div v-for="(item, index) in row.priceAdjustment" :key="index">
-            <div>{{ item }}</div>
-          </div>
+          <div v-if="row.priceAdjustment" class="patch">补</div>
         </template>
       </el-table-column>
       <el-table-column label="创建时间" prop="createTime" />
@@ -299,14 +297,92 @@
     >
       <el-form ref="priceForm" :model="priceForm" class="search-form" label-width="120px">
         <el-form-item
+          label="成交日期"
+          prop="dealDate"
+          required
+          :rules="[{ required: true, message: '请输入成交日期', trigger: 'blur' }]"
+        >
+          <el-date-picker
+            v-model="priceForm.dealDate"
+            placeholder="请选择日期"
+            type="date"
+            value-format="yyyy-MM-dd"
+            :clearable="false"
+            style="width: 200px"
+          />
+        </el-form-item>
+        <el-form-item
+          label="成交产品"
+          prop="productOne"
+          v-if="priceForm.type === 1"
+          required
+          :rules="[{ required: true, message: '请输入成交产品', trigger: 'blur' }]"
+        >
+          <el-select v-model="priceForm.productOne" placeholder="请选择">
+            <el-option
+              v-for="(item, index) in productOneOptions"
+              :key="index"
+              :label="item.name"
+              :value="item.id + '_' + item.name"
+            />
+          </el-select>
+        </el-form-item>
+        <template v-if="priceForm.type === 2">
+          <el-form-item
+            v-for="(x, index) in priceForm.productTwo"
+            :label="'成交产品' + index"
+            :key="x.key + index"
+            :prop="'productTwo.' + index + '.value'"
+            :rules="[{ required: true, message: '请输入成交产品', trigger: 'blur' }]"
+            required
+          >
+            <div>
+              <el-select v-model="x.value" placeholder="请选择">
+                <el-option
+                  v-for="(item, y) in productTwoOptions"
+                  :key="y"
+                  :label="item.name"
+                  :value="item.id + '_' + item.name"
+                />
+              </el-select>
+              <i
+                class="el-icon-remove"
+                color="#ff7777"
+                type="minus-filled"
+                style="margin-left: 10px; cursor: pointer"
+                @click="deleteProduct(x)"
+              />
+            </div>
+          </el-form-item>
+          <div class="el-form-item">
+            <label class="el-form-item__label" style="width: 120px; visibility: hidden">x</label>
+            <el-button type="primary" class="addProductsBtn" @click="addProducts">增加</el-button>
+          </div>
+        </template>
+        <el-form-item
+          label="支付方式"
+          prop="pay"
+          required
+          :rules="[{ required: true, message: '请输入支付方式', trigger: 'blur' }]"
+        >
+          <el-select v-model="priceForm.pay" placeholder="请选择">
+            <el-option
+              v-for="(item, index) in payOptions"
+              :key="index"
+              :label="item.label"
+              :value="item.value + '_' + item.label"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item
           label="金额"
-          prop="num"
+          prop="price"
           required
           :rules="[{ required: true, message: '请输入数字', trigger: 'blur' }]"
         >
-          <el-input-number size="medium" v-model="priceForm.num" :step="1" />
+          <el-input-number size="medium" v-model="priceForm.price" :step="1" />
           <div style="margin-left: -43px; color: #fe6e6d">
-            注意：提交后产品总价会重新计算，确认无误后请点击提交
+            注意：提交后会新增一条记录，确认无误后请点击提交
           </div>
         </el-form-item>
       </el-form>
@@ -319,15 +395,18 @@
 </template>
 
 <script>
-// import dayjs from 'dayjs'
+import dayjs from 'dayjs'
+import _ from 'lodash'
 import { regionData } from 'element-china-area-data'
 import {
   getSaleList,
   getCustomer,
   deleteCustomer,
   downloadExcel,
-  editPrice,
+  addCustomer,
   editCustomer,
+  getProductOne,
+  getProductTwo,
 } from '@/api/crm/index.js'
 
 import permission from '@/common/directive/permission' // 权限判断指令
@@ -336,7 +415,7 @@ import { hasPermission, exportFile } from '@/common/conf/utils'
 import heightMix from '@/mixins/height'
 import tableHeight from '@/mixins/tableHeight'
 
-// const today = dayjs().format('YYYY-MM-DD')
+const today = dayjs().format('YYYY-MM-DD')
 // const startDate = dayjs().startOf('month').format('YYYY-MM-DD')
 // const endDate = dayjs().endOf('month').format('YYYY-MM-DD')
 // console.log(endDate)
@@ -358,7 +437,16 @@ export default {
         },
       },
       priceForm: {
-        num: 0,
+        dealDate: today,
+        type: 1,
+        productOne: '',
+        productTwo: [
+          {
+            value: '',
+          },
+        ],
+        pay: '',
+        price: 0,
       },
       editForm: {
         weixin: '',
@@ -381,6 +469,8 @@ export default {
       dialogVisible: false,
       dialogEditVisible: false,
       dialogPriceVisible: false,
+      productOneOptions: [],
+      productTwoOptions: [],
     }
   },
   computed: {
@@ -410,9 +500,20 @@ export default {
 
     this.getSaleList()
     this.fetchData()
+
+    this.getPtOne()
+    this.getPtTwo()
   },
   methods: {
     hasPermission,
+    async getPtOne() {
+      const { data } = await getProductOne()
+      this.productOneOptions = data
+    },
+    async getPtTwo() {
+      const { data } = await getProductTwo()
+      this.productTwoOptions = data
+    },
     async getSaleList() {
       const { data } = await getSaleList()
       this.salesOptions = data
@@ -547,10 +648,26 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(async valid => {
         if (valid) {
-          this.priceForm.id = this.currentId
-          this.priceForm.price = this.currentPrice
-          await editPrice(this.priceForm)
+          const newObj = _.cloneDeep(this.currentPrice)
+          delete newObj.dealDate
+          delete newObj.payId
+          delete newObj.payMode
+          delete newObj.price
+          delete newObj.product
+          delete newObj.productId
+          delete newObj._id
 
+          newObj.dealDate = this.priceForm.dealDate
+          newObj.price = this.priceForm.price
+          newObj.pay = this.priceForm.pay
+          newObj.sale = `${newObj.saleId}_${newObj.saleName}`
+          newObj.productOne = this.priceForm.productOne
+          newObj.productTwo = this.priceForm.productTwo
+          delete newObj.saleId
+          delete newObj.saleName
+          newObj.priceAdjustment = true
+
+          await addCustomer(newObj)
           this.$message.success('提交成功')
 
           this.fetchData()
@@ -577,9 +694,21 @@ export default {
       })
     },
     handlePrice(row) {
-      this.currentId = row._id
-      this.currentPrice = row.price
+      this.currentPrice = row
+      this.priceForm.type = row.type
       this.dialogPriceVisible = true
+    },
+    addProducts() {
+      this.priceForm.productTwo.push({
+        value: '',
+        key: Date.now(),
+      })
+    },
+    deleteProduct(item) {
+      const index = this.priceForm.productTwo.indexOf(item)
+      if (this.priceForm.productTwo.length > 1 && index !== -1) {
+        this.priceForm.productTwo.splice(index, 1)
+      }
     },
   },
 }
