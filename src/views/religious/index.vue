@@ -49,6 +49,7 @@
       :data="list"
       :element-loading-text="elementLoadingText"
       :height="height"
+      stripe
     >
       <el-table-column label="序号" type="index" width="90">
         <template slot-scope="scope">

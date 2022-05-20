@@ -49,6 +49,7 @@
       :height="height"
       :show-summary="true"
       :summary-method="getSummaries"
+      stripe
     >
       <el-table-column label="序号" type="index" width="90">
         <template slot-scope="scope">

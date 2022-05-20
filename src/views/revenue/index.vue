@@ -43,6 +43,9 @@
           />
         </el-select>
       </el-form-item>
+      <el-form-item label="真实姓名">
+        <el-input v-model="queryForm.realName" placeholder="请输入真实姓名" clearable />
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="fetchData">查询</el-button>
       </el-form-item>
@@ -59,6 +62,7 @@
       :height="height"
       :show-summary="true"
       :summary-method="getSummaries"
+      stripe
     >
       <el-table-column label="序号" type="index" width="90">
         <template slot-scope="scope">
@@ -101,11 +105,24 @@
           <div v-if="row.priceAdjustment" class="patch">补</div>
         </template>
       </el-table-column>
+      <el-table-column label="是否红包" prop="hongbao">
+        <template #default="{ row }">
+          <div v-if="row.hongbao" class="patch">补</div>
+        </template>
+      </el-table-column>
       <el-table-column label="创建时间" prop="createTime" />
       <el-table-column label="更新时间" prop="updateTime" />
-      <el-table-column label="操作" width="260" align="center">
+      <el-table-column label="操作" width="360" align="center">
         <template #default="{ $index, row }">
           <div>
+            <el-button
+              type="primary"
+              plain
+              @click="handlePrice(row, $index)"
+              v-permission="['admin', 'platformer']"
+            >
+              给红包
+            </el-button>
             <el-button
               type="primary"
               plain
@@ -116,7 +133,6 @@
             </el-button>
             <el-button
               type="primary"
-              plain
               @click="handleEdit(row, $index)"
               v-permission="['admin', 'platformer']"
             >
@@ -124,7 +140,6 @@
             </el-button>
             <el-button
               type="danger"
-              plain
               v-permission="['admin', 'platformer']"
               @click="handleDelete(row, $index)"
             >
@@ -431,6 +446,7 @@ export default {
         saleId: '',
         type: '',
         payId: '',
+        realName: '',
         page: {
           size: 20,
           current: 1,
