@@ -166,7 +166,6 @@ export default {
   },
   methods: {
     handleEdit(row) {
-      window.console.log(11, row)
       this.currentRow = row
       const {
         weixin,
