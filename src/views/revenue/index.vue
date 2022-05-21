@@ -107,7 +107,7 @@
       </el-table-column>
       <el-table-column label="是否红包" prop="hongbao">
         <template #default="{ row }">
-          <div v-if="row.hongbao" class="patch">补</div>
+          <div v-if="row.hongbao" class="red_package">红</div>
         </template>
       </el-table-column>
       <el-table-column label="创建时间" prop="createTime" />
@@ -115,20 +115,17 @@
       <el-table-column label="操作" width="360" align="center">
         <template #default="{ $index, row }">
           <div>
-            <el-button
-              type="primary"
-              plain
-              @click="handleHongBao(row, $index)"
-              v-permission="['admin', 'platformer']"
-            >
-              给红包
-            </el-button>
+            <HongBaoButton
+              :ref="'baoButton_' + row._id"
+              @click.native="handleHongBao(row, $index)"
+              @on-price="fetchData"
+            />
             <PaymentButton
               :ref="'payButton_' + row._id"
               :productOneOptions="productOneOptions"
               :productTwoOptions="productTwoOptions"
               @click.native="handlePay(row, $index)"
-              @on-edit="fetchData"
+              @on-pay="fetchData"
             />
             <EditButton
               :ref="'editButton_' + row._id"
@@ -170,6 +167,7 @@ import { hasPermission, exportFile } from '@/common/conf/utils'
 // 权限判断方法
 import heightMix from '@/mixins/height'
 import tableHeight from '@/mixins/tableHeight'
+import HongBaoButton from './HongBaoButton'
 import EditButton from './EditButton'
 import PaymentButton from './PaymentButton'
 import DeleteButton from './DeleteButton'
@@ -181,6 +179,7 @@ export default {
     EditButton,
     PaymentButton,
     DeleteButton,
+    HongBaoButton,
   },
   data() {
     return {
@@ -310,14 +309,9 @@ export default {
       }
     },
     handleHongBao(row) {
-      this.currentPrice = row
-      window.console.log(this.$refs.editButton)
       this.$nextTick(() => {
-        window.console.log(this.$refs, row, this.$refs.editButton)
-        // this.$refs.editButton.handleDelete(row)
+        this.$refs[`baoButton_${row._id}`].handleOpen(row)
       })
-      // this.priceForm.type = row.type
-      // this.dialogPriceVisible = true
     },
     handleEdit(row) {
       this.$nextTick(() => {

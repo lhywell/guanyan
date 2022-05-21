@@ -1,10 +1,10 @@
-<!-- 补差价 -->
+<!-- 给红包 -->
 <template>
   <div style="display: inline-block; margin-right: 10px">
-    <el-button type="primary" plain v-permission="['admin', 'platformer']"> 补差价 </el-button>
-    <!-- 补差价 -->
+    <el-button type="primary" plain v-permission="['admin', 'platformer']"> 给红包 </el-button>
+    <!-- 给红包 -->
     <el-dialog
-      title="补差价"
+      title="给红包"
       :visible.sync="dialogPriceVisible"
       width="30%"
       :close-on-click-modal="false"
@@ -26,54 +26,6 @@
             style="width: 200px"
           />
         </el-form-item>
-        <el-form-item
-          label="成交产品"
-          prop="productOne"
-          v-if="priceForm.type === 1"
-          required
-          :rules="[{ required: true, message: '请输入成交产品', trigger: 'blur' }]"
-        >
-          <el-select v-model="priceForm.productOne" placeholder="请选择">
-            <el-option
-              v-for="(item, index) in productOneOptions"
-              :key="index"
-              :label="item.name"
-              :value="item.id + '_' + item.name"
-            />
-          </el-select>
-        </el-form-item>
-        <template v-if="priceForm.type === 2">
-          <el-form-item
-            v-for="(x, index) in priceForm.productTwo"
-            :label="'成交产品' + index"
-            :key="x.key + index"
-            :prop="'productTwo.' + index + '.value'"
-            :rules="[{ required: true, message: '请输入成交产品', trigger: 'blur' }]"
-            required
-          >
-            <div>
-              <el-select v-model="x.value" placeholder="请选择">
-                <el-option
-                  v-for="(item, y) in productTwoOptions"
-                  :key="y"
-                  :label="item.name"
-                  :value="item.id + '_' + item.name"
-                />
-              </el-select>
-              <i
-                class="el-icon-remove"
-                color="#ff7777"
-                type="minus-filled"
-                style="margin-left: 10px; cursor: pointer"
-                @click="deleteProduct(x)"
-              />
-            </div>
-          </el-form-item>
-          <div class="el-form-item">
-            <label class="el-form-item__label" style="width: 120px; visibility: hidden">x</label>
-            <el-button type="primary" class="addProductsBtn" @click="addProducts">增加</el-button>
-          </div>
-        </template>
         <el-form-item
           label="支付方式"
           prop="pay"
@@ -155,7 +107,7 @@ export default {
         this.priceForm.productTwo.splice(index, 1)
       }
     },
-    handlePrice(row) {
+    handleOpen(row) {
       this.currentPrice = row
       this.priceForm.type = row.type
       this.dialogPriceVisible = true
@@ -164,9 +116,10 @@ export default {
       this.$refs[formName].validate(async valid => {
         if (valid) {
           if (this.priceForm.price < 0) {
-            this.$message.error('补差价不能为负数')
+            this.$message.error('红包不能为负数')
             return false
           }
+
           const newObj = _.cloneDeep(this.currentPrice)
           delete newObj.dealDate
           delete newObj.payId
@@ -184,9 +137,9 @@ export default {
           newObj.productTwo = this.priceForm.productTwo
           delete newObj.saleId
           delete newObj.saleName
-          newObj.priceAdjustment = true
-          newObj.hongbao = false
-
+          newObj.priceAdjustment = false
+          newObj.hongbao = true
+          window.console.log(1, newObj)
           await addCustomer(newObj)
           this.$message.success('提交成功')
 

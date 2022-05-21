@@ -427,6 +427,7 @@ export default {
         if (valid) {
           // 补差价为否
           this.queryForm.priceAdjustment = false
+          this.queryForm.hongbao = false
           const birthdayX = `${this.queryForm.birthdayX_year}-${this.queryForm.birthdayX_month}-${this.queryForm.birthdayX_day}`
           const birthdayXR = dayjs(birthdayX).format('YYYY-MM-DD')
           this.queryForm.birthdayX = birthdayXR === 'Invalid Date' ? '' : birthdayXR
