@@ -87,6 +87,11 @@
           <div v-if="row.priceAdjustment" class="patch">补</div>
         </template>
       </el-table-column>
+      <el-table-column label="是否红包" prop="hongbao">
+        <template #default="{ row }">
+          <div v-if="row.hongbao" class="red_package">红</div>
+        </template>
+      </el-table-column>
       <el-table-column label="创建时间" prop="createTime" />
       <el-table-column label="更新时间" prop="updateTime" />
     </el-table>
