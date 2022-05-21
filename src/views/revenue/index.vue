@@ -124,24 +124,22 @@
               给红包
             </el-button>
             <PaymentButton
-              ref="payButton"
+              :ref="'payButton_' + row._id"
               :productOneOptions="productOneOptions"
               :productTwoOptions="productTwoOptions"
               @click.native="handlePay(row, $index)"
-              @on-edit="paySuccess"
+              @on-edit="fetchData"
             />
             <EditButton
-              ref="editButton"
+              :ref="'editButton_' + row._id"
               @click.native="handleEdit(row, $index)"
-              @on-edit="editSuccess"
+              @on-edit="fetchData"
             />
-            <el-button
-              type="danger"
-              v-permission="['admin', 'platformer']"
-              @click="handleDelete(row, $index)"
-            >
-              删除
-            </el-button>
+            <DeleteButton
+              :ref="'deleteButton_' + row._id"
+              @click.native="handleDelete(row, $index)"
+              @on-delete="fetchData"
+            />
           </div>
         </template>
       </el-table-column>
@@ -155,20 +153,6 @@
       @current-change="handleCurrentChange"
       @size-change="handleSizeChange"
     />
-    <!-- 删除 -->
-    <el-dialog
-      title="请确认"
-      :visible.sync="dialogVisible"
-      width="30%"
-      :before-close="handleClose"
-      :close-on-click-modal="false"
-    >
-      确定删除所选记录吗，删除后将无法恢复？
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取消</el-button>
-        <el-button type="danger" @click="deleteRow">确认删除</el-button>
-      </span>
-    </el-dialog>
   </el-main>
 </template>
 
@@ -178,7 +162,6 @@ import {
   getProductTwo,
   getSaleList,
   getCustomer,
-  deleteCustomer,
   downloadExcel,
 } from '@/api/crm/index.js'
 
@@ -189,6 +172,7 @@ import heightMix from '@/mixins/height'
 import tableHeight from '@/mixins/tableHeight'
 import EditButton from './EditButton'
 import PaymentButton from './PaymentButton'
+import DeleteButton from './DeleteButton'
 
 export default {
   directives: { permission },
@@ -196,6 +180,7 @@ export default {
   components: {
     EditButton,
     PaymentButton,
+    DeleteButton,
   },
   data() {
     return {
@@ -213,7 +198,6 @@ export default {
       },
       salesOptions: [],
       listLoading: false,
-      dialogVisible: false,
       productOneOptions: [],
       productTwoOptions: [],
     }
@@ -313,26 +297,7 @@ export default {
       // window.console.log(sums)
       return sums
     },
-    handleDelete(row) {
-      this.currentId = row._id
-      this.dialogVisible = true
-    },
-    handleClose() {
-      this.dialogVisible = false
-    },
-    async deleteRow() {
-      try {
-        await deleteCustomer({
-          id: this.currentId,
-        })
 
-        this.$message.success('删除成功')
-        this.fetchData()
-        this.dialogVisible = false
-      } catch (error) {
-        window.console.log(error)
-      }
-    },
     async handleExport() {
       try {
         const res = await downloadExcel()
@@ -346,20 +311,28 @@ export default {
     },
     handleHongBao(row) {
       this.currentPrice = row
-      this.priceForm.type = row.type
-      this.dialogPriceVisible = true
+      window.console.log(this.$refs.editButton)
+      this.$nextTick(() => {
+        window.console.log(this.$refs, row, this.$refs.editButton)
+        // this.$refs.editButton.handleDelete(row)
+      })
+      // this.priceForm.type = row.type
+      // this.dialogPriceVisible = true
     },
     handleEdit(row) {
-      this.$refs.editButton.handleEdit(row)
+      this.$nextTick(() => {
+        this.$refs[`editButton_${row._id}`].handleEdit(row)
+      })
     },
-    editSuccess() {
-      this.fetchData()
+    handleDelete(row) {
+      this.$nextTick(() => {
+        this.$refs[`deleteButton_${row._id}`].handleDelete(row)
+      })
     },
     handlePay(row) {
-      this.$refs.payButton.handlePrice(row)
-    },
-    paySuccess() {
-      this.fetchData()
+      this.$nextTick(() => {
+        this.$refs[`payButton_${row._id}`].handlePrice(row)
+      })
     },
   },
 }

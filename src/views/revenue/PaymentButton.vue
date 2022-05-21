@@ -1,4 +1,4 @@
-<!-- 财务管理 -->
+<!-- 补差价 -->
 <template>
   <div style="display: inline-block; margin-right: 10px">
     <el-button type="primary" plain v-permission="['admin', 'platformer']"> 补差价 </el-button>

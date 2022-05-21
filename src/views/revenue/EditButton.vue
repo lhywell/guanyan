@@ -1,4 +1,4 @@
-<!-- 财务管理 -->
+<!-- 编辑 -->
 <template>
   <div style="display: inline-block; margin-right: 10px">
     <el-button type="primary" v-permission="['admin', 'platformer']"> 编辑 </el-button>
@@ -142,6 +142,7 @@ import permission from '@/common/directive/permission' // 权限判断指令
 import { editCustomer } from '@/api/crm/index.js'
 
 export default {
+  name: 'query_edit',
   directives: { permission },
   data() {
     return {
