@@ -29,6 +29,7 @@ module.exports = {
   productionSourceMap: false,
   // assetsDir: './',
   devServer: {
+    hot: true,
     // host: ip.address(),
     host: 'localhost',
     // 配置自动启动浏览器
