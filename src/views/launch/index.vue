@@ -46,7 +46,7 @@
       :height="height"
       stripe
     >
-      <el-table-column label="序号" type="index" width="90">
+      <el-table-column label="序号" type="index" width="60">
         <template slot-scope="scope">
           <span v-text="getIndex(scope.$index, queryForm.page.current, queryForm.page.size)" />
         </template>
@@ -78,9 +78,48 @@
       <el-table-column label="出生时间" prop="birthTime" />
       <el-table-column label="出生地" prop="birthAddressLabel" width="120" />
       <!-- <el-table-column label="电话号码" prop="customerPhone" /> -->
-      <el-table-column label="身份证地址" prop="idCardAddress" />
-      <el-table-column label="现居地" prop="liveAddress" />
-      <el-table-column label="邮寄地址" prop="mailAddress" />
+      <el-table-column label="身份证地址" prop="idCardAddress">
+        <template #default="{ $index, row }">
+          <div>
+            <el-tooltip class="item" effect="dark" placement="top">
+              <div slot="content" style="max-width: 200px">
+                {{ row.idCardAddress }}
+              </div>
+              <div style="white-space: nowrap; text-overflow: ellipsis; overflow: hidden">
+                {{ row.idCardAddress }}
+              </div>
+            </el-tooltip>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column label="现居地" prop="liveAddress">
+        <template #default="{ $index, row }">
+          <div>
+            <el-tooltip class="item" effect="dark" placement="top">
+              <div slot="content" style="max-width: 200px">
+                {{ row.liveAddress }}
+              </div>
+              <div style="white-space: nowrap; text-overflow: ellipsis; overflow: hidden">
+                {{ row.liveAddress }}
+              </div>
+            </el-tooltip>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column label="邮寄地址" prop="mailAddress">
+        <template #default="{ $index, row }">
+          <div>
+            <el-tooltip class="item" effect="dark" placement="top">
+              <div slot="content" style="max-width: 200px">
+                {{ row.mailAddress }}
+              </div>
+              <div style="white-space: nowrap; text-overflow: ellipsis; overflow: hidden">
+                {{ row.mailAddress }}
+              </div>
+            </el-tooltip>
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column label="备注" prop="comment" />
       <el-table-column label="是否补差价" prop="priceAdjustment">
         <template #default="{ row }">

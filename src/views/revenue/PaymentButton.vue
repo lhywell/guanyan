@@ -190,7 +190,7 @@ export default {
           await addCustomer(newObj)
           this.$message.success('提交成功')
 
-          this.$emit('on-price')
+          this.$emit('on-pay')
           this.dialogPriceVisible = false
           return true
         }
