@@ -177,6 +177,7 @@ export default {
       const { data } = await getCustomer(params)
       const list = data.records
       this.total = data.total
+      this.$set(this.queryForm.page, 'current', data.current)
       this.list = list
 
       setTimeout(() => {
