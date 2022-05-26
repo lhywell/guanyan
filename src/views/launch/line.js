@@ -92,7 +92,6 @@ export default {
   series: {
     type: 'bar',
     encode: { x: 'month', y: 'price' },
-    datasetIndex: 1,
     name: '成交总额',
     barWidth: 24,
     smooth: true,
