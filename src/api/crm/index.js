@@ -83,3 +83,12 @@ export function downloadExcel(data) {
     responseType: 'blob',
   })
 }
+
+// 获取当月统计分析成交数据
+export function getPriceByMonth(data) {
+  return request({
+    url: `${baseURL}/customer/getPriceByMonth`,
+    method: 'post',
+    data,
+  })
+}

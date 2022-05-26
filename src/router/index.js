@@ -98,16 +98,30 @@ export const asyncRoutes = [
   },
   {
     path: '/launch',
+    name: 'launch',
     component: Layout,
     redirect: 'noRedirect',
+    meta: {
+      title: '投放管理',
+      icon: 'el-icon-data-analysis',
+      roles: ['admin', 'platformer', 'launcher'],
+    },
     children: [
       {
-        path: 'index',
+        path: 'deal',
         component: () => import('@/views/launch/index'),
-        name: 'launch',
+        name: 'deal',
         meta: {
-          title: '投放管理',
-          icon: 'el-icon-data-analysis',
+          title: '成交数据',
+          roles: ['admin', 'platformer', 'launcher'],
+        },
+      },
+      {
+        path: 'chart',
+        component: () => import('@/views/launch/chart'),
+        name: 'chart',
+        meta: {
+          title: '图表数据',
           roles: ['admin', 'platformer', 'launcher'],
         },
       },
