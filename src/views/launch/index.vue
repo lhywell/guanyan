@@ -51,8 +51,20 @@
           <span v-text="getIndex(scope.$index, queryForm.page.current, queryForm.page.size)" />
         </template>
       </el-table-column>
-      <el-table-column label="加粉日期" prop="newDate" width="120" />
-      <el-table-column label="成交日期" prop="dealDate" width="120" />
+      <el-table-column label="加粉日期" prop="newDate" width="120">
+        <template #default="{ row }">
+          <div>
+            <div>{{ getDate(row.newDate) }}</div>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column label="成交日期" prop="dealDate" width="120">
+        <template #default="{ row }">
+          <div>
+            <div>{{ getDate(row.dealDate) }}</div>
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column label="咨询师" prop="saleName" />
       <el-table-column label="成交手机" prop="dealPhone" />
       <el-table-column label="转化类型" prop="type" />

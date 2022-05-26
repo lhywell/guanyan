@@ -205,7 +205,6 @@
 </template>
 
 <script>
-import dayjs from 'dayjs'
 import {
   getProductOne,
   getProductTwo,
@@ -286,9 +285,6 @@ export default {
   },
   methods: {
     hasPermission,
-    getDate(date) {
-      return dayjs(date).format('YYYY-MM-DD')
-    },
     async getPtOne() {
       const { data } = await getProductOne()
       this.productOneOptions = data

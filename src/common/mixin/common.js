@@ -1,3 +1,5 @@
+import dayjs from 'dayjs'
+
 export default {
   data() {
     return {
@@ -140,6 +142,9 @@ export default {
     },
     getIndex($index, pageNo, pageSize) {
       return $index + (pageNo - 1) * pageSize + 1
+    },
+    getDate(date) {
+      return dayjs(date).format('YYYY-MM-DD')
     },
   },
 }
