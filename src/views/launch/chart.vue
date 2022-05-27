@@ -27,7 +27,12 @@
     >
       <el-table-column label="加粉日期" prop="">
         <template #default="{ row }">
-          <div>{{ row.month }}</div>
+          <a
+            href="#"
+            @click="openDialoge(row)"
+            style="text-decoration: underline; color: #0078fe"
+            >{{ row.month }}</a
+          >
         </template>
       </el-table-column>
       <el-table-column label="成交日期" prop="dealDate">
@@ -38,6 +43,122 @@
       <el-table-column label="成交总额（元）" prop="price" />
     </el-table>
     <div id="priceDataChart" class="echarts" />
+    <!-- 抽屉 -->
+    <el-drawer
+      title="月度数据"
+      :visible.sync="drawer"
+      :direction="direction"
+      :before-close="handleClose"
+      append-to-body
+      size="80%"
+    >
+      <div style="margin: 20px">
+        <el-table
+          ref="tableSort"
+          v-loading="listLoading"
+          :data="monthList"
+          :element-loading-text="elementLoadingText"
+          stripe
+        >
+          <el-table-column label="序号" type="index" width="60">
+            <template slot-scope="scope">
+              <span v-text="getIndex(scope.$index, drawForm.page.current, drawForm.page.size)" />
+            </template>
+          </el-table-column>
+          <el-table-column label="加粉日期" prop="newDate" width="120">
+            <template #default="{ row }">
+              <div>
+                <div>{{ getDate(row.newDate) }}</div>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column label="成交日期" prop="dealDate" width="120">
+            <template #default="{ row }">
+              <div>
+                <div>{{ getDate(row.dealDate) }}</div>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column label="咨询师" prop="saleName" />
+          <el-table-column label="成交手机" prop="dealPhone" />
+          <el-table-column label="转化类型" prop="type" />
+          <el-table-column label="成交产品" prop="product" width="160">
+            <template #default="{ row }">
+              <div v-for="(item, index) in row.product.split(',')" :key="index">
+                <div>{{ item }}</div>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column label="成交产品总价" prop="price" width="120" />
+          <el-table-column label="支付方式" prop="payMode" />
+          <el-table-column label="性别" prop="sex">
+            <template #default="{ row }">
+              <div v-if="row.sex">{{ row.sex === 1 ? '男' : '女' }}</div>
+            </template>
+          </el-table-column>
+          <el-table-column label="阳历出生日" prop="birthdayX" width="120" />
+          <el-table-column label="阴历出生日" prop="birthdayY" width="120" />
+          <el-table-column label="出生时间" prop="birthTime" />
+          <el-table-column label="出生地" prop="birthAddressLabel" width="120" />
+          <!-- <el-table-column label="电话号码" prop="customerPhone" /> -->
+          <el-table-column label="身份证地址" prop="idCardAddress">
+            <template #default="{ $index, row }">
+              <div>
+                <el-tooltip class="item" effect="dark" placement="top">
+                  <div slot="content" style="max-width: 200px">
+                    {{ row.idCardAddress }}
+                  </div>
+                  <div style="white-space: nowrap; text-overflow: ellipsis; overflow: hidden">
+                    {{ row.idCardAddress }}
+                  </div>
+                </el-tooltip>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column label="现居地" prop="liveAddress">
+            <template #default="{ $index, row }">
+              <div>
+                <el-tooltip class="item" effect="dark" placement="top">
+                  <div slot="content" style="max-width: 200px">
+                    {{ row.liveAddress }}
+                  </div>
+                  <div style="white-space: nowrap; text-overflow: ellipsis; overflow: hidden">
+                    {{ row.liveAddress }}
+                  </div>
+                </el-tooltip>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column label="邮寄地址" prop="mailAddress">
+            <template #default="{ $index, row }">
+              <div>
+                <el-tooltip class="item" effect="dark" placement="top">
+                  <div slot="content" style="max-width: 200px">
+                    {{ row.mailAddress }}
+                  </div>
+                  <div style="white-space: nowrap; text-overflow: ellipsis; overflow: hidden">
+                    {{ row.mailAddress }}
+                  </div>
+                </el-tooltip>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column label="备注" prop="comment" />
+          <el-table-column label="是否补差价" prop="priceAdjustment">
+            <template #default="{ row }">
+              <div v-if="row.priceAdjustment" class="patch">补</div>
+            </template>
+          </el-table-column>
+          <el-table-column label="是否红包" prop="hongbao">
+            <template #default="{ row }">
+              <div v-if="row.hongbao" class="red_package">红</div>
+            </template>
+          </el-table-column>
+          <el-table-column label="创建时间" prop="createTime" />
+          <el-table-column label="更新时间" prop="updateTime" />
+        </el-table>
+      </div>
+    </el-drawer>
   </el-main>
 </template>
 
@@ -68,6 +189,14 @@ export default {
       lineOption,
       amount: 0,
       monthList: [],
+      drawer: false,
+      direction: 'rtl',
+      drawForm: {
+        page: {
+          size: 20,
+          current: 1,
+        },
+      },
     }
   },
   computed: {
@@ -141,12 +270,31 @@ export default {
         this.getCostomer(obj, i + 1)
       }
     },
-    async getCostomer(params, index) {
+    async getCostomer(params) {
       const { data } = await getCustomer(params)
       window.console.log(params, data)
-      setTimeout(() => {
-        this[`monthList${index}`] = data.records
-      }, 1500)
+      this.$nextTick(() => {
+        this.monthList = data
+      })
+    },
+    openDialoge(row) {
+      this.drawer = true
+      const currentMonth = this.queryForm.month
+      const { month } = row
+
+      const start = dayjs(month).startOf('month').format('YYYY-MM-DD')
+      const end = dayjs(month).endOf('month').format('YYYY-MM-DD')
+      const dstart = dayjs(currentMonth).startOf('month').format('YYYY-MM-DD')
+      const dend = dayjs(currentMonth).endOf('month').format('YYYY-MM-DD')
+      window.console.log([start, end], [dstart, dend])
+      const obj = {
+        newDate: [start, end],
+        dealDate: [dstart, dend],
+      }
+      this.getCostomer(obj)
+    },
+    handleClose(done) {
+      done()
     },
   },
 }
