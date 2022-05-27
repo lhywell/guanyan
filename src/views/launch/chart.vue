@@ -25,11 +25,17 @@
       :element-loading-text="elementLoadingText"
       stripe
     >
-      <el-table-column label="加粉月份" prop="month" />
-      <el-table-column label="成交月份" prop="month">
-        {{ queryForm.month }}
+      <el-table-column label="加粉日期" prop="">
+        <template #default="{ row }">
+          <div>{{ row.month }}</div>
+        </template>
       </el-table-column>
-      <el-table-column label="成交总额(元)" prop="price" />
+      <el-table-column label="成交日期" prop="dealDate">
+        <template #default="{}">
+          <div>{{ queryForm.month }}</div>
+        </template>
+      </el-table-column>
+      <el-table-column label="成交总额（元）" prop="price" />
     </el-table>
     <div id="priceDataChart" class="echarts" />
   </el-main>
@@ -38,19 +44,19 @@
 <script>
 import dayjs from 'dayjs'
 import * as echarts from 'echarts'
-import { getPriceByMonth } from '@/api/crm/index.js'
+import { getCustomer, getPriceByMonth } from '@/api/crm/index.js'
 
 import permission from '@/common/directive/permission' // 权限判断指令
 import { hasPermission } from '@/common/conf/utils'
 // 权限判断方法
 import heightMix from '@/mixins/height'
-import tableHeight from '@/mixins/tableHeight'
+// import tableHeight from '@/mixins/tableHeight'
 import lineOption from './line'
 
 const startDate = dayjs().startOf('month').format('YYYY-MM')
 export default {
   directives: { permission },
-  mixins: [heightMix, tableHeight],
+  mixins: [heightMix],
   components: {},
   data() {
     return {
@@ -61,6 +67,7 @@ export default {
       listLoading: false,
       lineOption,
       amount: 0,
+      monthList: [],
     }
   },
   computed: {
@@ -101,6 +108,7 @@ export default {
       this.listLoading = true
       const { data } = await getPriceByMonth(params)
       this.list = data.everymonth
+
       // 当月成交总额
       this.amount = data.price
 
@@ -115,6 +123,30 @@ export default {
       setTimeout(() => {
         this.listLoading = false
       }, 500)
+    },
+    handleChange(list) {
+      for (let i = 0; i < list.length; i++) {
+        const { month } = list[i]
+
+        const currentMonth = this.queryForm.month
+        const start = dayjs(month).startOf('month').format('YYYY-MM-DD')
+        const end = dayjs(month).endOf('month').format('YYYY-MM-DD')
+        const dstart = dayjs(currentMonth).startOf('month').format('YYYY-MM-DD')
+        const dend = dayjs(currentMonth).endOf('month').format('YYYY-MM-DD')
+        window.console.log([start, end], [dstart, dend])
+        const obj = {
+          newDate: [start, end],
+          dealDate: [dstart, dend],
+        }
+        this.getCostomer(obj, i + 1)
+      }
+    },
+    async getCostomer(params, index) {
+      const { data } = await getCustomer(params)
+      window.console.log(params, data)
+      setTimeout(() => {
+        this[`monthList${index}`] = data.records
+      }, 1500)
     },
   },
 }
