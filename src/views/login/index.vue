@@ -122,7 +122,7 @@ export default {
           await this.$store.dispatch('user/changeRoles', [aryEn[index]])
           if (data.roleName === '投放管理员') {
             this.$router.push({
-              path: '/launch/index',
+              path: '/launch/deal',
             })
           } else if (this.$route.query.redirect) {
             this.$router.push({ path: this.$route.query.redirect })

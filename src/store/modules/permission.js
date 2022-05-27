@@ -51,7 +51,7 @@ const actions = {
             if (roles[0] !== 'launcher') {
               route.redirect = '/company'
             } else {
-              route.redirect = `/launch/index`
+              route.redirect = `/launch/deal`
             }
             return true
           }
