@@ -28,6 +28,14 @@
           />
         </el-select>
       </el-form-item>
+      <el-form-item label="成交手机">
+        <el-input
+          v-model="queryForm.dealPhone"
+          placeholder="请输入"
+          clearable
+          style="width: 200px"
+        />
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="fetchData">查询</el-button>
       </el-form-item>
@@ -183,6 +191,7 @@ export default {
       queryForm: {
         newDate: '',
         type: '',
+        dealPhone: '',
         page: {
           size: 20,
           current: 1,
