@@ -40,6 +40,7 @@
           <div>{{ queryForm.month }}</div>
         </template>
       </el-table-column>
+      <el-table-column label="成交单数" prop="count" />
       <el-table-column label="成交总额（元）" prop="price" />
     </el-table>
     <div id="priceDataChart" class="echarts" />
