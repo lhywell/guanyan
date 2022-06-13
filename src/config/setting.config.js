@@ -9,7 +9,8 @@ const outputDir =
     production: 'dist',
   }[process.env.NODE_ENV] || 'dist'
 
-let baseURL = 'http://123.57.207.8/api'
+// let baseURL = 'http://123.57.207.8/api'
+let baseURL = 'https://dayu.guanyan001.cn/api'
 if (isDev) {
   // baseURL = 'https://t-zwlh.bailian-ai.com/applet-admin/api'
   baseURL = '/api'
