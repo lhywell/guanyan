@@ -42,6 +42,10 @@ export default {
           label: '海风吹对公',
           value: 7,
         },
+        {
+          label: '小鹅通',
+          value: 8,
+        },
       ],
     }
   },
