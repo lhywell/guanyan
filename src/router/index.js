@@ -125,6 +125,15 @@ export const asyncRoutes = [
           roles: ['admin', 'platformer', 'launcher'],
         },
       },
+      {
+        path: 'roi',
+        component: () => import('@/views/launch/roi'),
+        name: 'roi',
+        meta: {
+          title: 'ROI统计',
+          roles: ['admin', 'platformer', 'launcher'],
+        },
+      },
     ],
   },
   {

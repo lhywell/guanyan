@@ -92,3 +92,30 @@ export function getPriceByMonth(data) {
     data,
   })
 }
+
+// 增加roi统计数据
+export function addFans(data) {
+  return request({
+    url: `${baseURL}/roi/add`,
+    method: 'post',
+    data,
+  })
+}
+
+// 得到roi统计数据
+export function getFans(data) {
+  return request({
+    url: `${baseURL}/roi/page`,
+    method: 'post',
+    data,
+  })
+}
+
+// 删除roi统计数据
+export function deleteFans(data) {
+  return request({
+    url: `${baseURL}/roi/delete`,
+    method: 'get',
+    params: data,
+  })
+}
