@@ -26,7 +26,7 @@
       <el-table-column label="加粉日期" prop="newDate">
         <template #default="{ row }">
           <div>
-            <div>{{ getDate(row.newDate) }}</div>
+            <div>{{ row.newDate !== '合计' ? getDate(row.newDate) : row.newDate }}</div>
           </div>
         </template>
       </el-table-column>
@@ -137,8 +137,24 @@ export default {
       }
       this.listLoading = true
       const { data } = await getFans(params)
-      window.console.log(data)
-      const list = data
+      const list = data.records
+
+      data.records.push({
+        adPrice: data.adPrice,
+        cost: data.cost,
+        customerNumberOne: data.customerNumberOne,
+        customerNumberTwo: data.customerNumberTwo,
+        customerPriceOne: data.customerPriceOne,
+        customerPriceTwo: data.customerPriceTwo,
+        dealPhone: '    ',
+        newCustomerNumber: data.newCustomerNumber,
+        newDate: '合计',
+        priceAll: data.priceAll,
+        roi: data.roi,
+        type: '',
+        updateTime: '',
+        woa: '',
+      })
       this.list = list
 
       setTimeout(() => {
@@ -180,5 +196,8 @@ export default {
     font-weight: bold;
     font-style: normal;
   }
+}
+.el-table__row:last-child {
+  background: #f5f7fa;
 }
 </style>
