@@ -43,7 +43,7 @@
       <el-table-column label="获客成本（每人次）" prop="cost">
         <template #default="{ $index, row }">
           <div>
-            {{ row.cost.toFixed(1) }}
+            {{ row.cost ? row.cost.toFixed(1) : row.cost }}
           </div>
         </template>
       </el-table-column>
@@ -62,7 +62,7 @@
       <el-table-column label="备注" prop="notice" />
       <el-table-column label="操作" align="center" width="210">
         <template #default="{ $index, row }">
-          <div>
+          <div v-if="row.newDate !== '合计'">
             <el-button type="primary" plain @click="addNotice(row)">添加备注</el-button>
             <el-button type="danger" plain @click="deleteRow(row)">删除</el-button>
           </div>
@@ -139,22 +139,24 @@ export default {
       const { data } = await getFans(params)
       const list = data.records
 
-      data.records.push({
-        adPrice: data.adPrice,
-        cost: data.cost,
-        customerNumberOne: data.customerNumberOne,
-        customerNumberTwo: data.customerNumberTwo,
-        customerPriceOne: data.customerPriceOne,
-        customerPriceTwo: data.customerPriceTwo,
-        dealPhone: '    ',
-        newCustomerNumber: data.newCustomerNumber,
-        newDate: '合计',
-        priceAll: data.priceAll,
-        roi: data.roi,
-        type: '',
-        updateTime: '',
-        woa: '',
-      })
+      if (data.records.length > 0) {
+        data.records.push({
+          adPrice: data.adPrice,
+          cost: data.cost,
+          customerNumberOne: data.customerNumberOne,
+          customerNumberTwo: data.customerNumberTwo,
+          customerPriceOne: data.customerPriceOne,
+          customerPriceTwo: data.customerPriceTwo,
+          dealPhone: '    ',
+          newCustomerNumber: data.newCustomerNumber,
+          newDate: '合计',
+          priceAll: data.priceAll,
+          roi: data.roi,
+          type: '',
+          updateTime: '',
+          woa: '',
+        })
+      }
       this.list = list
 
       setTimeout(() => {
