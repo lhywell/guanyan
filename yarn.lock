@@ -9146,10 +9146,10 @@
     "schema-utils" "^3.0.0"
     "semver" "^7.3.2"
 
-"sass@^1.3.0", "sass@1.32.13":
-  "integrity" "sha1-jSnISeYlpBW85xYJx8+V4V907QA="
-  "resolved" "https://registry.npmmirror.com/sass/download/sass-1.32.13.tgz"
-  "version" "1.32.13"
+"sass@^1.3.0", "sass@^1.38.0":
+  "integrity" "sha1-Lz5goe/c3JEFhvp53InTOZoUW08="
+  "resolved" "http://bailian-aliyun-nexus.bl-ai.com:4873/sass/-/sass-1.38.0.tgz"
+  "version" "1.38.0"
   dependencies:
     "chokidar" ">=3.0.0 <4.0.0"
 
