@@ -29,10 +29,10 @@
         <el-form-item
           label="投放了"
           required
-          prop="type"
+          prop="woaType"
           :rules="[{ required: true, message: '投放公众号不能为空', trigger: 'blur' }]"
         >
-          <el-select v-model="priceForm.type" placeholder="请选择" @change="typeChange">
+          <el-select v-model="priceForm.woaType" placeholder="请选择" @change="typeChange">
             <el-option
               v-for="(item, index) in typeOption"
               :key="index"
@@ -53,7 +53,7 @@
         <el-form-item
           label="成交手机"
           required
-          v-if="priceForm.type === '2'"
+          v-if="priceForm.woaType === '2'"
           prop="dealPhone"
           :rules="[{ required: true, message: '成交手机不能为空', trigger: 'blur' }]"
         >
@@ -106,7 +106,7 @@ export default {
     return {
       priceForm: {
         newDate: today,
-        type: '',
+        woaType: '',
         woa: '',
         dealPhone: '',
         adPrice: 0,
@@ -159,7 +159,7 @@ export default {
     reset() {
       this.priceForm = {
         newDate: today,
-        type: '',
+        woaType: '',
         woa: '',
         dealPhone: '',
         adPrice: 0,

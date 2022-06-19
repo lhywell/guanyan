@@ -50,7 +50,7 @@
       <el-table-column label="一转人数" prop="customerNumberOne" />
       <el-table-column label="一转订单额" prop="customerPriceOne" />
       <el-table-column label="二转人数" prop="customerNumberTwo" />
-      <el-table-column label="二转订单额" prop="customerNumberTwo" />
+      <el-table-column label="二转订单额" prop="customerPriceTwo" />
       <el-table-column label="成交总额" prop="priceAll" />
       <el-table-column label="ROI" prop="roi">
         <template #default="{ $index, row }">
@@ -152,7 +152,7 @@ export default {
           newDate: '合计',
           priceAll: data.priceAll,
           roi: data.roi,
-          type: '',
+          woaType: '',
           updateTime: '',
           woa: '',
         })
