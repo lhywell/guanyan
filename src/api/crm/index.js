@@ -119,3 +119,12 @@ export function deleteFans(data) {
     params: data,
   })
 }
+
+// 添加更新备注
+export function updateNotice(data) {
+  return request({
+    url: `${baseURL}/roi/updateNotice`,
+    method: 'post',
+    data,
+  })
+}

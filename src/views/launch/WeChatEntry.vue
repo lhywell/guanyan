@@ -81,6 +81,9 @@
         >
           <el-input-number size="medium" v-model="priceForm.newCustomerNumber" :min="0" :step="1" />
         </el-form-item>
+        <el-form-item label="备注" prop="notice">
+          <el-input v-model="priceForm.notice" />
+        </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="cancel">取消</el-button>
@@ -111,6 +114,7 @@ export default {
         dealPhone: '',
         adPrice: 0,
         newCustomerNumber: 0,
+        notice: '',
       },
       typeOption: [
         {
@@ -164,6 +168,7 @@ export default {
         dealPhone: '',
         adPrice: 0,
         newCustomerNumber: 0,
+        notice: '',
       }
     },
     cancel() {

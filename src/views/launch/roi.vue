@@ -63,7 +63,12 @@
       <el-table-column label="操作" align="center" width="210">
         <template #default="{ $index, row }">
           <div v-if="row.newDate !== '合计'">
-            <el-button type="primary" plain @click="addNotice(row)">添加备注</el-button>
+            <addNoticeButton
+              :ref="'noticeButton_' + row._id"
+              @click.native="addNotice(row, $index)"
+              @on-edit="fetchData"
+            />
+            <!-- <el-button type="primary" plain @click="addNotice(row)">添加备注</el-button> -->
             <el-button type="danger" plain @click="deleteRow(row)">删除</el-button>
           </div>
         </template>
@@ -76,7 +81,7 @@
 import dayjs from 'dayjs'
 import WeChatEntry from './WeChatEntry'
 import { getFans, deleteFans } from '@/api/crm/index.js'
-
+import addNoticeButton from './addNoticeButton'
 import permission from '@/common/directive/permission' // 权限判断指令
 import { hasPermission } from '@/common/conf/utils'
 // 权限判断方法
@@ -88,6 +93,7 @@ export default {
   directives: { permission },
   mixins: [heightMix],
   components: {
+    addNoticeButton,
     WeChatEntry,
   },
   data() {
@@ -173,6 +179,11 @@ export default {
 
       this.$message.success('删除成功')
       this.fetchData()
+    },
+    addNotice(row) {
+      this.$nextTick(() => {
+        this.$refs[`noticeButton_${row._id}`].handleEdit(row)
+      })
     },
   },
 }
