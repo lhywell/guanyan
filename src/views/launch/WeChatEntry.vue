@@ -1,7 +1,9 @@
 <!-- 给红包 -->
 <template>
   <div style="display: inline-block; margin-right: 10px">
-    <el-button type="primary" plain v-permission="['admin', 'platformer']"> 录入 </el-button>
+    <el-button type="primary" plain v-permission="['admin', 'platformer', 'launcher']">
+      录入
+    </el-button>
     <!-- 给红包 -->
     <el-dialog
       title="给红包"
