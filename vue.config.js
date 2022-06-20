@@ -1,5 +1,5 @@
 const path = require('path')
-const ip = require('ip')
+// const ip = require('ip')
 
 const Timestamp = new Date().getTime()
 
@@ -59,6 +59,9 @@ module.exports = {
     loaderOptions: {
       scss: {
         additionalData: `@import "~@/assets/sass/common/variables.scss";@import "~@/assets/sass/common/mixins.scss";`,
+        sassOptions: {
+          outputStyle: 'expanded',
+        },
       },
     },
   },
