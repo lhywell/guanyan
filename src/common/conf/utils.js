@@ -54,6 +54,20 @@ export function formatNumber(value) {
   }
 }
 
+/**
+ * @name Utils#numberWithCommas
+ * @function
+ * @desc 千位符格式化。
+ * @param Number 待格式化数字
+ * @return String 截取后字符串
+ */
+export function numberWithCommas(x) {
+  x = x.toString()
+  const pattern = /(-?\d+)(\d{3})/
+  while (pattern.test(x)) x = x.replace(pattern, '$1,$2')
+  return x
+}
+
 export function byteSwitch(b, i = 0) {
   const unit = ['B', 'KB', 'MB', 'GB', 'TB']
   while (b >= 1024 && i <= 4) {

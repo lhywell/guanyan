@@ -16,7 +16,7 @@
       </el-form-item>
     </el-form>
     <div class="amount">
-      成交总额：<em>{{ amount }}</em> 元
+      成交总额：<em>{{ numberWithCommas(amount) }}</em> 元
     </div>
     <el-table
       ref="tableSort"
@@ -41,7 +41,11 @@
         </template>
       </el-table-column>
       <el-table-column label="成交单数" prop="count" />
-      <el-table-column label="成交总额（元）" prop="price" />
+      <el-table-column label="成交总额（元）" prop="price">
+        <template #default="{ row }">
+          <div>{{ numberWithCommas(row.price) }}</div>
+        </template>
+      </el-table-column>
     </el-table>
     <div id="priceDataChart" class="echarts" />
     <!-- 抽屉 -->
@@ -169,7 +173,7 @@ import * as echarts from 'echarts'
 import { getCustomer, getPriceByMonth } from '@/api/crm/index.js'
 
 import permission from '@/common/directive/permission' // 权限判断指令
-import { hasPermission } from '@/common/conf/utils'
+import { hasPermission, numberWithCommas } from '@/common/conf/utils'
 // 权限判断方法
 import heightMix from '@/mixins/height'
 // import tableHeight from '@/mixins/tableHeight'
@@ -182,6 +186,7 @@ export default {
   components: {},
   data() {
     return {
+      numberWithCommas,
       list: [],
       queryForm: {
         month: startDate,

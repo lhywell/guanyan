@@ -38,7 +38,13 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="广告费" prop="adPrice" />
+      <el-table-column label="广告费" prop="adPrice">
+        <template #default="{ $index, row }">
+          <div>
+            {{ numberWithCommas(row.adPrice) }}
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column label="实际添加数" prop="newCustomerNumber" />
       <el-table-column label="获客成本（每人次）" prop="cost">
         <template #default="{ $index, row }">
@@ -83,7 +89,7 @@ import WeChatEntry from './WeChatEntry'
 import { getFans, deleteFans } from '@/api/crm/index.js'
 import addNoticeButton from './addNoticeButton'
 import permission from '@/common/directive/permission' // 权限判断指令
-import { hasPermission } from '@/common/conf/utils'
+import { hasPermission, numberWithCommas } from '@/common/conf/utils'
 // 权限判断方法
 import heightMix from '@/mixins/height'
 // import tableHeight from '@/mixins/tableHeight'
@@ -98,6 +104,7 @@ export default {
   },
   data() {
     return {
+      numberWithCommas,
       list: [],
       queryForm: {
         month: startDate,

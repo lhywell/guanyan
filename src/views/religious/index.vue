@@ -169,7 +169,7 @@
 import { getCustomer, downloadExcel } from '@/api/crm/index.js'
 
 import permission from '@/common/directive/permission' // 权限判断指令
-import { hasPermission, exportFile } from '@/common/conf/utils'
+import { hasPermission, exportFile, numberWithCommas } from '@/common/conf/utils'
 // 权限判断方法
 import heightMix from '@/mixins/height'
 import tableHeight from '@/mixins/tableHeight'
@@ -283,7 +283,7 @@ export default {
               }
               return prev
             }, 0)
-            sums[index] += ' 元'
+            sums[index] = `${numberWithCommas(sums[index])} 元`
           } else {
             sums[index] = 'N/A'
           }
