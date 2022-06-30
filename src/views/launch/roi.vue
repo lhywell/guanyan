@@ -21,6 +21,7 @@
       v-loading="listLoading"
       :data="list"
       :element-loading-text="elementLoadingText"
+      :height="height"
       stripe
     >
       <el-table-column label="加粉日期" prop="newDate">
