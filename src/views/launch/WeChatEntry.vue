@@ -1,12 +1,12 @@
-<!-- 给红包 -->
+<!-- 录入 -->
 <template>
   <div style="display: inline-block; margin-right: 10px">
     <el-button type="primary" plain v-permission="['admin', 'platformer', 'launcher']">
       录入
     </el-button>
-    <!-- 给红包 -->
+    <!-- 录入 -->
     <el-dialog
-      title="给红包"
+      title="录入"
       :visible.sync="dialogPriceVisible"
       width="30%"
       :close-on-click-modal="false"
@@ -52,15 +52,34 @@
           <!-- Wechat Official Accounts -->
           <el-input v-model="priceForm.woa" required placeholder="请输入公众号名称" clearable />
         </el-form-item>
-        <el-form-item
-          label="成交手机"
-          required
-          v-if="priceForm.woaType === '2'"
-          prop="dealPhone"
-          :rules="[{ required: true, message: '成交手机不能为空', trigger: 'blur' }]"
-        >
-          <el-input v-model="priceForm.dealPhone" placeholder="请输入成交手机" clearable />
-        </el-form-item>
+        <template v-if="priceForm.woaType === '2'">
+          <el-form-item
+            v-for="(x, index) in priceForm.phoneMulti"
+            :label="'成交手机' + index"
+            :key="x.key + index"
+            :prop="'phoneMulti.' + index + '.value'"
+            :rules="[{ required: true, message: '成交手机不能为空', trigger: ['blur', 'change'] }]"
+            required
+          >
+            <el-input
+              v-model="x.value"
+              placeholder="请输入成交手机"
+              clearable
+              style="width: 210px; display: inline-block"
+            />
+            <i
+              class="el-icon-remove"
+              color="#ff7777"
+              type="minus-filled"
+              style="margin-left: 10px; cursor: pointer"
+              @click="deleteProduct(x)"
+            />
+          </el-form-item>
+          <div class="el-form-item">
+            <label class="el-form-item__label" style="width: 120px; visibility: hidden">x</label>
+            <el-button type="primary" class="addProductsBtn" @click="addProducts">增加</el-button>
+          </div>
+        </template>
         <el-form-item
           label="广告费"
           required
@@ -95,7 +114,7 @@
   </div>
 </template>
 <script>
-// import _ from 'lodash'
+import _ from 'lodash'
 import dayjs from 'dayjs'
 
 import permission from '@/common/directive/permission' // 权限判断指令
@@ -114,6 +133,12 @@ export default {
         woaType: '',
         woa: '',
         dealPhone: '',
+        phoneMulti: [
+          {
+            value: '',
+            key: Date.now(),
+          },
+        ],
         adPrice: 0,
         newCustomerNumber: 0,
         notice: '',
@@ -146,11 +171,26 @@ export default {
     typeChange() {
       this.priceForm.dealPhone = ''
     },
+    addProducts() {
+      this.priceForm.phoneMulti.push({
+        value: '',
+        key: Date.now(),
+      })
+    },
+    deleteProduct(item) {
+      const index = this.priceForm.phoneMulti.indexOf(item)
+      if (this.priceForm.phoneMulti.length > 1 && index !== -1) {
+        this.priceForm.phoneMulti.splice(index, 1)
+      }
+    },
     submitForm(formName) {
       this.$refs[formName].validate(async valid => {
         if (valid) {
-          // window.console.log(1, this.priceForm)
-          await addFans(this.priceForm)
+          this.priceForm.dealPhone = this.priceForm.phoneMulti.map(d => d.value).toString()
+          delete this.priceForm.phoneMulti
+          const obj = _.cloneDeep(this.priceForm)
+
+          await addFans(obj)
           this.$message.success('提交成功')
 
           this.$emit('on-success')

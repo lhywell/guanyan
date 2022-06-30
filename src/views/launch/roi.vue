@@ -61,7 +61,7 @@
       <el-table-column label="ROI" prop="roi">
         <template #default="{ $index, row }">
           <div>
-            {{ row.roi ? row.roi.toFixed(2) : '' }}
+            {{ row.roi !== 0 ? row.roi.toFixed(2) : 0 }}
           </div>
         </template>
       </el-table-column>
