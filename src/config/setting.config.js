@@ -6,11 +6,11 @@ const isDev = process.env.NODE_ENV === 'development'
 const outputDir =
   {
     development: 'test',
-    production: 'dist',
-  }[process.env.NODE_ENV] || 'dist'
+    production: 'fangyuan',
+  }[process.env.NODE_ENV] || 'fangyuan'
 
 // let baseURL = 'http://123.57.207.8/api'
-let baseURL = 'https://dayu.guanyan001.cn/api'
+let baseURL = 'https://fangyuan.guanyan001.cn/api'
 if (isDev) {
   // baseURL = 'https://t-zwlh.bailian-ai.com/applet-admin/api'
   baseURL = '/api'
@@ -44,7 +44,7 @@ const setting = {
   // 开发以及部署时的URL
   publicPath,
   // 生产环境构建文件的目录名
-  // outputDir: isDev ? 'test' : 'dist',
+  // outputDir: isDev ? 'test' : 'fangyuan',
   outputDir,
   // 放置生成的静态资源 (js、css、img、fonts) 的 (相对于 outputDir 的) 目录。
   assetsDir: 'static',
