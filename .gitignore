@@ -4,6 +4,7 @@ node_modules
 /test
 /retail-frontend
 /retail-fe
+/fangyuan
 
 *.zip
 # local env files

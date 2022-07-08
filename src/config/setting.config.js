@@ -10,7 +10,7 @@ const outputDir =
   }[process.env.NODE_ENV] || 'fangyuan'
 
 // let baseURL = 'http://123.57.207.8/api'
-let baseURL = 'https://fangyuan.guanyan001.cn/api'
+let baseURL = 'https://fangyuan.guanyan001.cn/fangyuan/api'
 if (isDev) {
   // baseURL = 'https://t-zwlh.bailian-ai.com/applet-admin/api'
   baseURL = '/api'
